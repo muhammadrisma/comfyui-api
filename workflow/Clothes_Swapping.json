@@ -3,7 +3,7 @@
     "inputs": {
       "mask_grow": 25,
       "mixed_precision": "fp16",
-      "seed": 1020195240579030,
+      "seed": 115596789541841,
       "steps": 50,
       "cfg": 3,
       "image": [
@@ -22,18 +22,6 @@
     "class_type": "CatVTONWrapper",
     "_meta": {
       "title": "CatVTON Wrapper"
-    }
-  },
-  "11": {
-    "inputs": {
-      "mask": [
-        "13",
-        1
-      ]
-    },
-    "class_type": "LayerMask: MaskPreview",
-    "_meta": {
-      "title": "LayerMask: MaskPreview"
     }
   },
   "13": {
@@ -83,7 +71,7 @@
   },
   "17": {
     "inputs": {
-      "image": "img.jpg",
+      "image": "WhatsApp Image 2024-12-20 at 14.47.23_84218ded (1).jpg",
       "upload": "image"
     },
     "class_type": "LoadImage",
@@ -93,7 +81,7 @@
   },
   "18": {
     "inputs": {
-      "image": "img_ref.jpg",
+      "image": "panda_t_shirt - Copy.jpg",
       "upload": "image"
     },
     "class_type": "LoadImage",

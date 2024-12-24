@@ -70,7 +70,7 @@ def process(img, rotate_pitch, rotate_yaw, rotate_roll, blink, eyebrow, wink, pu
 expression_editing = gr.Interface(
     fn=process,
     inputs=[
-        gr.Image(label="Input Image: ", type="numpy"), 
+        gr.Image(label="Input Image: ", type="numpy", height=500), 
         gr.Slider(value=0, minimum=-20.0, maximum=20.0, step=0.1, label="Rotate Pitch"),
         gr.Slider(value=0, minimum=-20.0, maximum=20.0, step=0.1, label="Rotate Yaw"),
         gr.Slider(value=0, minimum=-20.0, maximum=20.0, step=0.1, label="Rotate Roll"),
@@ -84,7 +84,7 @@ expression_editing = gr.Interface(
         gr.Slider(value=0, minimum=-20.0, maximum=15.0, step=0.1, label="WOO"),
         gr.Slider(value=0, minimum=-0.2, maximum=1.3, step=0.1, label="Smile"),
     ],
-    outputs=[gr.Gallery(label="Outputs: ")] 
+    outputs=[gr.Gallery(label="Outputs: ", height=500)] 
 )
 
 expression_editing.queue()

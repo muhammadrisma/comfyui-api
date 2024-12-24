@@ -49,16 +49,16 @@ def process(img, img_ref, top_clothes, bottom_clothes):
     images = get_prompt_images(prompt)
     return images
 
-cloth_swap = gr.Interface(
+cloth_swaping = gr.Interface(
     fn=process,
     inputs=[
-        gr.Image(label="Input Image: ", type="numpy"), 
-        gr.Image(label="Input Image Reference: ", type="numpy"),  
+        gr.Image(label="Input Image: ", type="numpy" , height=500), 
+        gr.Image(label="Input Image Reference: ", type="numpy", height=500),  
         gr.Dropdown(value="True",choices=["True", "False"], label="Target Top Clothes (True/False): "),
         gr.Dropdown(value="False", choices=["True", "False"], label="Target Bottom Clothes (True/False): "),
     ],
-    outputs=[gr.Gallery(label="Outputs: ")]  
+    outputs=[gr.Gallery(label="Outputs: ", height=500), ]  
 )
 
-cloth_swap.queue()
-cloth_swap.launch()
+cloth_swaping.queue()
+cloth_swaping.launch()
