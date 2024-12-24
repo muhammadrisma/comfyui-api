@@ -120,3 +120,14 @@ Both tools display processed images after operations in output galleries.
 ### Interface
 1. **cloth swap** : ![!\[alt text\](expression.png)](<Interface demo/cloth_swap.png>)
 2. **expression editing** : ![!\[alt text\](expression.png)](<Interface demo/expression.png>)
+
+## References
+
+- ComfyUI Workflow:
+1. Expression Editing: [text](https://www.youtube.com/watch?v=q0Vf-ZZsbzI&t=150s)
+2. Cloth Swap: [text](https://youtu.be/WXmkLih9jfk?si=6vHraq-s49P4DLPb)
+
+- Thanks to tutorial from YT Code Crafters Corner "Build a Character Portrait Generator with ComfyUI API, Python, WebSocket and Gradio": 
+1. https://youtu.be/kmZqoLJ2Dhk?si=DNN4nE5mue5cXzx2
+2. https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI
+3. https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS
