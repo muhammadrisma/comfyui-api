@@ -26,7 +26,7 @@ def save_input_image(img, img_ref):
     
     return input_img.name, input_img_ref.name 
 
-def process(img, img_ref, top_clothes, bottom_clothes):
+def process(img, img_ref, top_clothes, bottom_clothes, left_Arm, right_Arm):
     with open(CLOTH_SWAP_WORKFLOW, "r", encoding="utf-8") as f:
         prompt = json.load(f)
 
@@ -36,7 +36,9 @@ def process(img, img_ref, top_clothes, bottom_clothes):
     # Map the top_clothes and bottom_clothes inputs
     prompt["13"]["inputs"].update({
         "top_clothes" : top_clothes == "True",
-        "bottom_clothes": bottom_clothes == "True"
+        "bottom_clothes": bottom_clothes == "True",
+        "left_arm": left_Arm == "True",
+        "right_arm": right_Arm == "True",
     })
     img_filename, img_ref_filename = save_input_image(img, img_ref)
 
@@ -56,6 +58,8 @@ cloth_swaping = gr.Interface(
         gr.Image(label="Input Image Reference: ", type="numpy", height=500),  
         gr.Dropdown(value="True",choices=["True", "False"], label="Target Top Clothes (True/False): "),
         gr.Dropdown(value="False", choices=["True", "False"], label="Target Bottom Clothes (True/False): "),
+        gr.Dropdown(value="False", choices=["True", "False"], label="Target Left Arm (True/False): "),
+        gr.Dropdown(value="False", choices=["True", "False"], label="Target Right Arm (True/False): "),
     ],
     outputs=[gr.Gallery(label="Outputs: ", height=500), ]  
 )
