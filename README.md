@@ -1,6 +1,6 @@
 # Expression Editing Tool & Cloth Swap API
 ## Notes(Important)
-Input Image should be had HD resolution so it can produces better results.
+Input Image should be had HD resolution so it can produces better results
 ## Overview
 
 The **Expression Editing Tool** is a Python-based application that utilizes Gradio for an interactive interface, enabling users to manipulate facial expressions in images through various adjustable parameters. It leverages the Pillow library for image handling and processes the input based on customizable JSON prompts.
