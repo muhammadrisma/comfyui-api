@@ -31,7 +31,7 @@ def process(img, img_ref, top_clothes, bottom_clothes, left_Arm, right_Arm):
         prompt = json.load(f)
 
     # Set a random seed for reproducibility
-    prompt["1"]["inputs"]["seed"] = random.randint(0, 99999999999)
+    prompt["1"]["inputs"]["seed"] = random.randint(0, 999999999999999)
 
     # Map the top_clothes and bottom_clothes inputs
     prompt["13"]["inputs"].update({
