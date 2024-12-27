@@ -1,92 +1,288 @@
 {
-  "1": {
-    "inputs": {
-      "mask_grow": 25,
-      "mixed_precision": "fp16",
-      "seed": 115596789541841,
-      "steps": 50,
-      "cfg": 3,
-      "image": [
-        "17",
-        0
+  "last_node_id": 18,
+  "last_link_id": 25,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CatVTONWrapper",
+      "pos": [
+        1146,
+        161
       ],
-      "mask": [
-        "13",
-        1
+      "size": [
+        315,
+        218
       ],
-      "refer_image": [
-        "18",
-        0
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 24,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 18
+        },
+        {
+          "name": "refer_image",
+          "type": "IMAGE",
+          "link": 25,
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            22
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CatVTONWrapper"
+      },
+      "widgets_values": [
+        25,
+        "fp16",
+        569980927546773,
+        "randomize",
+        50,
+        3
       ]
     },
-    "class_type": "CatVTONWrapper",
-    "_meta": {
-      "title": "CatVTON Wrapper"
-    }
-  },
-  "13": {
-    "inputs": {
-      "face": false,
-      "hair": false,
-      "glasses": false,
-      "top_clothes": true,
-      "bottom_clothes": false,
-      "torso_skin": false,
-      "left_arm": false,
-      "right_arm": false,
-      "left_leg": false,
-      "right_leg": false,
-      "left_foot": false,
-      "right_foot": false,
-      "detail_method": "VITMatte",
-      "detail_erode": 8,
-      "detail_dilate": 6,
-      "black_point": 0.01,
-      "white_point": 0.99,
-      "process_detail": true,
-      "device": "cuda",
-      "max_megapixels": 2,
-      "image": [
-        "17",
-        0
+    {
+      "id": 16,
+      "type": "CPackOutputImage",
+      "pos": [
+        1685.1904296875,
+        161
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 22
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "CPackOutputImage"
+      },
+      "widgets_values": [
+        "cpack_output_"
       ]
     },
-    "class_type": "LayerMask: HumanPartsUltra",
-    "_meta": {
-      "title": "LayerMask: Human Parts Ultra(Advance)"
-    }
-  },
-  "16": {
-    "inputs": {
-      "filename_prefix": "cpack_output_",
-      "images": [
-        "1",
-        0
+    {
+      "id": 13,
+      "type": "LayerMask: HumanPartsUltra",
+      "pos": [
+        682,
+        405
+      ],
+      "size": [
+        352.79998779296875,
+        534
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            18
+          ],
+          "slot_index": 1,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LayerMask: HumanPartsUltra"
+      },
+      "widgets_values": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        "PyMatting",
+        8,
+        6,
+        0.01,
+        0.99,
+        true,
+        "cuda",
+        2
+      ],
+      "color": "rgba(27, 80, 119, 0.7)"
+    },
+    {
+      "id": 17,
+      "type": "LoadImage",
+      "pos": [
+        314.57733154296875,
+        154.01858520507812
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            23,
+            24
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "5-TSKBSC586O017_MOONBEAM_1_T_ffb10620-e77b-4c10-9d8b-54cb2a11ac47_1024x1024.webp",
+        "image"
       ]
     },
-    "class_type": "CPackOutputImage",
-    "_meta": {
-      "title": "Image Output"
+    {
+      "id": 18,
+      "type": "LoadImage",
+      "pos": [
+        320.6447448730469,
+        562.2700805664062
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            25
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Load Reference Image",
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "id-11134207-7r98w-llzw0dmy3ton53.jpeg",
+        "image"
+      ]
+    }
+  ],
+  "links": [
+    [
+      18,
+      13,
+      1,
+      1,
+      1,
+      "MASK"
+    ],
+    [
+      22,
+      1,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      23,
+      17,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      24,
+      17,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      25,
+      18,
+      0,
+      1,
+      2,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.3513057093103944,
+      "offset": [
+        -138.2556579931105,
+        -48.77230062588229
+      ]
     }
   },
-  "17": {
-    "inputs": {
-      "image": "WhatsApp Image 2024-12-20 at 14.47.23_84218ded (1).jpg",
-      "upload": "image"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Load Image"
-    }
-  },
-  "18": {
-    "inputs": {
-      "image": "panda_t_shirt - Copy.jpg",
-      "upload": "image"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Load Reference Image"
-    }
-  }
+  "version": 0.4
 }
