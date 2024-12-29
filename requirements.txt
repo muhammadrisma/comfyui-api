@@ -2,3 +2,5 @@ gradio
 Pillow
 numpy
 websocket-client
+fastapi 
+uvicorn
