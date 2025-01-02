@@ -138,9 +138,3 @@ Both tools display processed images after operations in output galleries.
 2. [https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI](https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI)
 3. [https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS](https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS)
 ```
-
-### Changes Made:
-1. **Fixed the requirements installation command**: Changed `pip install -r requirements` to `pip install -r requirements.txt`.
-2. **Corrected the image paths**: Updated the image paths to use proper URL encoding for spaces (e.g., `Interface%20demo/cloth_swap.png`).
-3. **Ensured consistency in file and directory names**: Made sure all references to files and directories match the actual structure.
-4. **Improved readability**: Made minor formatting adjustments for better readability.
