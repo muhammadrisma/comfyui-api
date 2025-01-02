@@ -1,13 +1,19 @@
+import os
 import io
 import json
 import urllib.parse
 import urllib.request
 import uuid
-
 import websocket
+import psycopg2
+from psycopg2.extras import execute_values 
 from PIL import Image
 
-from settings import SERVER_ADDRESS
+from db_config import DB_CONFIG
+from dotenv import load_dotenv
+load_dotenv()
+
+SERVER_ADDRESS = os.getenv("SERVER_ADDRESS")
 
 server_address = SERVER_ADDRESS
 client_id = str(uuid.uuid4())
@@ -75,13 +81,32 @@ def get_images(ws, prompt):
 
     return output_images
 
+def save_images_to_db(client_id, prompt_id, images):
+    conn = psycopg2.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    
+    image_records = [
+        (str(client_id), str(prompt_id), io.BytesIO(image.tobytes()).getvalue())
+        for image in images
+    ]
+    
+    insert_query = """
+        INSERT INTO generated_images (client_id, prompt_id, image_data)
+        VALUES %s   
+    """
+    execute_values(cursor, insert_query, image_records)
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
 def get_prompt_images(prompt):
     ws = websocket.WebSocket()
     ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
     images = get_images(ws, prompt)
     outputs = []
     for node_id in images:
-        print(f"Processing node {node_id}...")
+        # print(f"Processing node {node_id}...")
         for image_data in images[node_id]:
             try:
                 image = Image.open(io.BytesIO(image_data))
@@ -90,4 +115,8 @@ def get_prompt_images(prompt):
                 print(f"Error processing image for node {node_id}: {e}")
     
     ws.close()
+    
+    # save to db
+    prompt_id = queue_prompt(prompt)["prompt_id"]
+    save_images_to_db(client_id, prompt_id, outputs)
     return outputs

@@ -4,3 +4,5 @@ numpy
 websocket-client
 fastapi 
 uvicorn
+python-dotenv
+psycopg2

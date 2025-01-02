@@ -1,6 +1,7 @@
 # Expression Editing Tool & Cloth Swap API
-## Notes(Important)
-Input Image should be had HD resolution so it can produces better results
+## Notes (Important)
+Input images should have HD resolution to produce better results.
+
 ## Overview
 
 The **Expression Editing Tool** is a Python-based application that utilizes Gradio for an interactive interface, enabling users to manipulate facial expressions in images through various adjustable parameters. It leverages the Pillow library for image handling and processes the input based on customizable JSON prompts.
@@ -38,13 +39,14 @@ This function saves the input images into a defined input folder within the Comf
 - The names of the saved input image and the reference image.
 
 ## Requirements
-Ensure Your already installed ComfyUI framework, then you should place `SERVER_ADRESS` and `COMFY_UI_PATH` in `settings.py` file.
-Your Comfyui should contain costume nodes and model that you will use for cloth swap and expression editing workflow.
+Ensure you have already installed the ComfyUI framework.
+Ensure you have a `.env` file in your working directory with the following variables: `SERVER_ADDRESS`, `COMFY_UI_PATH`, `CLOTH_SWAP_WORKFLOW`, `EXPRESSION_WORKFLOW`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`.
+Your ComfyUI should contain custom nodes and models that you will use for the cloth swap and expression editing workflows.
 
 Ensure that you have the following libraries installed:
 
 ```bash
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 Additionally, for the Cloth Swap API, ensure the following packages are installed:
@@ -70,8 +72,10 @@ your_project_directory/
 │   └── cloth_swap.json
 ├── expression_editing.py
 ├── cloth_swap.py
-├── settings.py
+├── db_config.py
 └── websockets_api.py
+├── .env
+├── README.md
 ```
 
 ## How to Use
@@ -95,7 +99,7 @@ your_project_directory/
 ### For Cloth Swap API
 
 1. **Set Up**:
-   Adjust the `COMFY_UI_PATH` and `CLOTH_SWAP_WORKFLOW` in the `settings.py` file to point to the appropriate directories.
+   Adjust the `COMFY_UI_PATH` and `CLOTH_SWAP_WORKFLOW` in the `.env` file to point to the appropriate directories.
 
 2. **Run the Script**:
    Execute the `cloth_swap.py` to launch the Gradio interface.
@@ -119,8 +123,9 @@ your_project_directory/
 Both tools display processed images after operations in output galleries.
 
 ### Interface
-1. **cloth swap** : ![!\[alt text\](expression.png)](<Interface demo/cloth_swap.png>)
-2. **expression editing** : ![!\[alt text\](expression.png)](<Interface demo/expression.png>)
+1. **Cloth Swap**: ![Cloth Swap Interface](Interface%20demo/cloth_swap.png)
+2. **Expression Editing**: ![Expression Editing Interface](Interface%20demo/expression.png)
+3. **.env**: ![.env File](Interface%20demo/env.png)
 
 ## References
 
@@ -129,6 +134,13 @@ Both tools display processed images after operations in output galleries.
 2. Cloth Swap: [link](https://youtu.be/WXmkLih9jfk?si=6vHraq-s49P4DLPb)
 
 - Thanks to tutorial from YT Code Crafters Corner "Build a Character Portrait Generator with ComfyUI API, Python, WebSocket and Gradio": 
-1. https://youtu.be/kmZqoLJ2Dhk?si=DNN4nE5mue5cXzx2
-2. https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI
-3. https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS
+1. [https://youtu.be/kmZqoLJ2Dhk?si=DNN4nE5mue5cXzx2](https://youtu.be/kmZqoLJ2Dhk?si=DNN4nE5mue5cXzx2)
+2. [https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI](https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI)
+3. [https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS](https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS)
+```
+
+### Changes Made:
+1. **Fixed the requirements installation command**: Changed `pip install -r requirements` to `pip install -r requirements.txt`.
+2. **Corrected the image paths**: Updated the image paths to use proper URL encoding for spaces (e.g., `Interface%20demo/cloth_swap.png`).
+3. **Ensured consistency in file and directory names**: Made sure all references to files and directories match the actual structure.
+4. **Improved readability**: Made minor formatting adjustments for better readability.
