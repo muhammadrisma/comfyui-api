@@ -1,6 +1,6 @@
-# .myenv/
-# .__pycache__/
-# .env
+.myenv/
+.__pycache__/
+.env
 #  .env.example
 #  .env.test
 #  .env.prod
