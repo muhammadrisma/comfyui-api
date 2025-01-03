@@ -1,0 +1,170 @@
+{
+  "1": {
+    "inputs": {
+      "image": "ba96bce819afb69cefd1e59a9f415779.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "2": {
+    "inputs": {
+      "ckpt_name": "epicphotogasm_v4One4All.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "3": {
+    "inputs": {
+      "text": "natural"
+    },
+    "class_type": "JjkText"
+  },
+  "4": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "2",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer"
+  },
+  "5": {
+    "inputs": {
+      "natural_skin": 0,
+      "bare_face": 0,
+      "washed_face": 0,
+      "dried_face": 0,
+      "skin_details": 0,
+      "skin_pores": 0,
+      "dimples": 0,
+      "wrinkles": 0,
+      "freckles": 1.3,
+      "moles": 0,
+      "skin_imperfections": 0,
+      "skin_acne": 0,
+      "tanned_skin": 0,
+      "eyes_details": 1.3,
+      "iris_details": 1.3,
+      "circular_iris": 1.3,
+      "circular_pupil": 1.3,
+      "active": true,
+      "text_in": [
+        "3",
+        0
+      ],
+      "seed": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "PortraitMasterSkinDetails"
+  },
+  "6": {
+    "inputs": {
+      "seed": -1
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "7": {
+    "inputs": {
+      "pixels": [
+        "1",
+        0
+      ],
+      "vae": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "8": {
+    "inputs": {
+      "seed": 157126940358100,
+      "steps": 20,
+      "cfg": 5,
+      "sampler_name": "euler",
+      "scheduler": "exponential",
+      "denoise": 0.4,
+      "model": [
+        "2",
+        0
+      ],
+      "positive": [
+        "9",
+        0
+      ],
+      "negative": [
+        "10",
+        0
+      ],
+      "latent_image": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "9": {
+    "inputs": {
+      "text": [
+        "5",
+        0
+      ],
+      "clip": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "10": {
+    "inputs": {
+      "text": "bad eyes, cgi, airbrushed, plastic, deformed, watermark, blur, glitch, broken",
+      "clip": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "11": {
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "12": {
+    "inputs": {
+      "saturation": 0.73,
+      "contrast": 1,
+      "brightness": 1,
+      "sharpness": 1,
+      "highpass_radius": 6,
+      "highpass_samples": 1,
+      "highpass_strength": 1,
+      "colorize": "true",
+      "image": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "Image Dragan Photography Filter"
+  },
+  "13": {
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  }
+}

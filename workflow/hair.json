@@ -1,0 +1,239 @@
+{
+  "136": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1,
+      "color": 0
+    },
+    "class_type": "EmptyImage"
+  },
+  "137": {
+    "inputs": {
+      "invert_mask": true,
+      "blend_mode": "normal",
+      "opacity": 100,
+      "x_percent": 50,
+      "y_percent": 50,
+      "mirror": "None",
+      "scale": 1,
+      "aspect_ratio": 1,
+      "rotate": 0,
+      "transform_method": "lanczos",
+      "anti_aliasing": 0,
+      "background_image": [
+        "136",
+        0
+      ],
+      "layer_image": [
+        "139",
+        0
+      ]
+    },
+    "class_type": "LayerUtility: ImageBlendAdvance"
+  },
+  "138": {
+    "inputs": {
+      "image": "ba96bce819afb69cefd1e59a9f415779.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "139": {
+    "inputs": {
+      "size": 1024,
+      "interpolation_mode": "bicubic",
+      "image": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "JWImageResizeByLongerSide"
+  },
+  "140": {
+    "inputs": {
+      "face": false,
+      "hair": true,
+      "body": false,
+      "clothes": false,
+      "accessories": false,
+      "background": false,
+      "confidence": 0.4,
+      "detail_range": 16,
+      "black_point": 0.01,
+      "white_point": 0.99,
+      "process_detail": true,
+      "images": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "LayerMask: PersonMaskUltra"
+  },
+  "142": {
+    "inputs": {
+      "ckpt_name": "epicphotogasm_ultimateFidelity.safetensors",
+      "vae_name": "Baked VAE",
+      "clip_skip": -1,
+      "lora_name": "HyperSD\\SD15\\Hyper-SD15-8steps-lora.safetensors",
+      "lora_model_strength": 1,
+      "lora_clip_strength": 1,
+      "positive": [
+        "206",
+        0
+      ],
+      "negative": "(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, (mutated hands and fingers:1.4), disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation",
+      "token_normalization": "length+mean",
+      "weight_interpretation": "comfy++",
+      "empty_latent_width": 1024,
+      "empty_latent_height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "Efficient Loader"
+  },
+  "153": {
+    "inputs": {
+      "combined": true,
+      "crop_factor": 4,
+      "bbox_fill": false,
+      "drop_size": 8,
+      "contour_fill": false,
+      "mask": [
+        "224",
+        0
+      ]
+    },
+    "class_type": "MaskToSEGS"
+  },
+  "154": {
+    "inputs": {
+      "model": [
+        "212",
+        0
+      ],
+      "clip": [
+        "142",
+        5
+      ],
+      "vae": [
+        "142",
+        4
+      ],
+      "positive": [
+        "142",
+        1
+      ],
+      "negative": [
+        "142",
+        2
+      ]
+    },
+    "class_type": "ToBasicPipe"
+  },
+  "156": {
+    "inputs": {
+      "guide_size": 384,
+      "guide_size_for": true,
+      "max_size": 1024,
+      "seed": 832328102034994,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "uni_pc",
+      "scheduler": "AYS SD1",
+      "denoise": 0.85,
+      "feather": 5,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "wildcard": "",
+      "refiner_ratio": 0.2,
+      "cycle": 1,
+      "inpaint_model": true,
+      "noise_mask_feather": 20,
+      "image": [
+        "137",
+        0
+      ],
+      "segs": [
+        "153",
+        0
+      ],
+      "basic_pipe": [
+        "154",
+        0
+      ]
+    },
+    "class_type": "DetailerForEachPipe"
+  },
+  "157": {
+    "inputs": {
+      "images": [
+        "156",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "206": {
+    "inputs": {
+      "text1": [
+        "207",
+        0
+      ],
+      "text2": [
+        "228",
+        0
+      ],
+      "separator": ""
+    },
+    "class_type": "CR Text Concatenate"
+  },
+  "207": {
+    "inputs": {
+      "string": ""
+    },
+    "class_type": "String Literal"
+  },
+  "212": {
+    "inputs": {
+      "block_number": 3,
+      "downscale_factor": 2,
+      "start_percent": 0,
+      "end_percent": 0.35,
+      "downscale_after_skip": true,
+      "downscale_method": "bicubic",
+      "upscale_method": "bicubic",
+      "model": [
+        "218",
+        0
+      ]
+    },
+    "class_type": "PatchModelAddDownscale"
+  },
+  "218": {
+    "inputs": {
+      "scale": 3,
+      "model": [
+        "142",
+        0
+      ]
+    },
+    "class_type": "PerturbedAttentionGuidance"
+  },
+  "224": {
+    "inputs": {
+      "select": 1,
+      "sel_mode": false,
+      "input1": [
+        "140",
+        1
+      ]
+    },
+    "class_type": "ImpactSwitch"
+  },
+  "228": {
+    "inputs": {
+      "text": "Beach Waves with Straight Hair: Mid-length, straight hair with loose beach waves at the ends. Add a light brown color with subtle blonde highlights\n"
+    },
+    "class_type": "JjkText"
+  }
+}

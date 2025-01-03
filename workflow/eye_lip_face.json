@@ -1,0 +1,180 @@
+{
+  "14": {
+    "inputs": {
+      "image": "ComfyUI_temp_syfma_00005_.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "15": {
+    "inputs": {
+      "seed": 590330806838624
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "16": {
+    "inputs": {
+      "ckpt_name": "epicphotogasm_v4One4All.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "17": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "16",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer"
+  },
+  "21": {
+    "inputs": {
+      "shot": "-",
+      "shot_weight": 0.68,
+      "gender": "-",
+      "androgynous": 0,
+      "ugly": 0,
+      "ordinary_face": 0,
+      "age": "-",
+      "nationality_1": "-",
+      "nationality_2": "-",
+      "nationality_mix": 0,
+      "body_type": "-",
+      "body_type_weight": 0,
+      "eyes_color": "Blue",
+      "eyes_shape": "-",
+      "lips_color": "Red Lips",
+      "lips_shape": "Large Lips",
+      "facial_expression": "-",
+      "facial_expression_weight": 0,
+      "face_shape": "Round",
+      "face_shape_weight": 1,
+      "facial_asymmetry": 0,
+      "hair_style": "-",
+      "hair_color": "-",
+      "hair_length": "-",
+      "disheveled": 0,
+      "beard": "-",
+      "beard_color": "-",
+      "active": true,
+      "text_in": [
+        "24",
+        0
+      ],
+      "seed": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "PortraitMasterBaseCharacter"
+  },
+  "22": {
+    "inputs": {
+      "pixels": [
+        "14",
+        0
+      ],
+      "vae": [
+        "16",
+        2
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "23": {
+    "inputs": {
+      "text": "bad eyes, cgi, airbrushed, plastic, deformed, watermark, blur, glitch, broken",
+      "clip": [
+        "17",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "24": {
+    "inputs": {
+      "text": "natural"
+    },
+    "class_type": "JjkText"
+  },
+  "25": {
+    "inputs": {
+      "samples": [
+        "27",
+        0
+      ],
+      "vae": [
+        "16",
+        2
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "26": {
+    "inputs": {
+      "text": [
+        "21",
+        0
+      ],
+      "clip": [
+        "17",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "27": {
+    "inputs": {
+      "seed": 674801526008265,
+      "steps": 20,
+      "cfg": 6,
+      "sampler_name": "euler",
+      "scheduler": "exponential",
+      "denoise": 0.35000000000000003,
+      "model": [
+        "16",
+        0
+      ],
+      "positive": [
+        "26",
+        0
+      ],
+      "negative": [
+        "23",
+        0
+      ],
+      "latent_image": [
+        "22",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "28": {
+    "inputs": {
+      "saturation": 0.73,
+      "contrast": 1,
+      "brightness": 1,
+      "sharpness": 1,
+      "highpass_radius": 6,
+      "highpass_samples": 1,
+      "highpass_strength": 0.99,
+      "colorize": "true",
+      "image": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "Image Dragan Photography Filter"
+  },
+  "29": {
+    "inputs": {
+      "images": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  }
+}

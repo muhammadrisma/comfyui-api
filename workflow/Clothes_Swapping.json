@@ -1,0 +1,92 @@
+{
+  "1": {
+    "inputs": {
+      "mask_grow": 25,
+      "mixed_precision": "fp16",
+      "seed": 115596789541841,
+      "steps": 50,
+      "cfg": 3,
+      "image": [
+        "17",
+        0
+      ],
+      "mask": [
+        "13",
+        1
+      ],
+      "refer_image": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "CatVTONWrapper",
+    "_meta": {
+      "title": "CatVTON Wrapper"
+    }
+  },
+  "13": {
+    "inputs": {
+      "face": false,
+      "hair": false,
+      "glasses": false,
+      "top_clothes": true,
+      "bottom_clothes": false,
+      "torso_skin": false,
+      "left_arm": false,
+      "right_arm": false,
+      "left_leg": false,
+      "right_leg": false,
+      "left_foot": false,
+      "right_foot": false,
+      "detail_method": "PyMatting",
+      "detail_erode": 8,
+      "detail_dilate": 6,
+      "black_point": 0.01,
+      "white_point": 0.99,
+      "process_detail": true,
+      "device": "cuda",
+      "max_megapixels": 2,
+      "image": [
+        "17",
+        0
+      ]
+    },
+    "class_type": "LayerMask: HumanPartsUltra",
+    "_meta": {
+      "title": "LayerMask: Human Parts Ultra(Advance)"
+    }
+  },
+  "16": {
+    "inputs": {
+      "filename_prefix": "cpack_output_",
+      "images": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "CPackOutputImage",
+    "_meta": {
+      "title": "Image Output"
+    }
+  },
+  "17": {
+    "inputs": {
+      "image": "WhatsApp Image 2024-12-20 at 14.47.23_84218ded (1).jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "18": {
+    "inputs": {
+      "image": "panda_t_shirt - Copy.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Reference Image"
+    }
+  }
+}
