@@ -31,7 +31,7 @@ def save_input_image(img, img_ref):
     
     return input_img.name, input_img_ref.name 
 
-def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Arm):
+def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Arm, left_leg, rigth_leg):
     with open(CLOTH_SWAP_WORKFLOW, "r", encoding="utf-8") as f:
         prompt = json.load(f)
 
@@ -45,6 +45,8 @@ def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Ar
         "torso_skin": torso == "True",
         "left_arm": left_Arm == "True",
         "right_arm": right_Arm == "True",
+        "left_leg": left_leg == "True",
+        "right_leg": rigth_leg == "True"
     })
     img_filename, img_ref_filename = save_input_image(img, img_ref)
 
@@ -69,6 +71,8 @@ def create_cloth_swapping_interface():
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Torso (True/False): "),
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Left Arm (True/False): "),
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Right Arm (True/False): "),
+            gr.Dropdown(value="False", choices=["True", "False"], label="Target Left Leg (True/False): "),
+            gr.Dropdown(value="False", choices=["True", "False"], label="Target Right Leg (True/False): ")
         ],
         outputs=[gr.Gallery(label="Outputs: ", height=500)]
     )
