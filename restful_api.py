@@ -13,10 +13,11 @@ from datetime import datetime
 from dotenv import load_dotenv
 from db_config import DB_CONFIG
 from websockets_api import get_prompt_images
+from fastapi.staticfiles import StaticFiles
 # Load environment variables
 load_dotenv()
 
-SERVER_ADDRESS = os.getenv("SERVER_ADDRESS")
+SERVER_ADDRESS = os.getenv("SERVER_ADDRESS") 
 COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
 RESULTS_PATH = os.getenv("RESULTS_PATH")
 CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
@@ -26,6 +27,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+app.mount("/results", StaticFiles(directory=RESULTS_PATH), name="results")
 
 app.add_middleware(
     CORSMiddleware,
@@ -197,6 +199,8 @@ def get_images_by_id(id: int):
 
     images = []
     for row in results:
+        # Modify the image_output_path to use the server URL
+        image_url = f"http://{SERVER_ADDRESS}/results/{Path(row['image_output_path']).name}"
         images.append({
             "id": row["id"],
             "client_id": row["client_id"],
@@ -204,7 +208,7 @@ def get_images_by_id(id: int):
             "file_size": row["file_size"],
             "file_type": row["file_type"],
             "upload_time": row["upload_time"],
-            "image_url":(row["image_output_path"])
+            "image_url": image_url  # Use the modified URL
         })
 
     return {"success": True, "images": images, "message": "Images retrieved successfully."}
@@ -223,6 +227,8 @@ def get_all_images():
 
     images = []
     for row in results:
+        # Modify the image_output_path to use the server URL
+        image_url = f"http://{SERVER_ADDRESS}/results/{Path(row['image_output_path']).name}"
         images.append({
             "id": row["id"],
             "prompt_id": row["prompt_id"],
@@ -230,7 +236,7 @@ def get_all_images():
             "file_size": row["file_size"],
             "file_type": row["file_type"],
             "upload_time": row["upload_time"],
-            "image_url": row["image_output_path"]
+            "image_url": image_url  # Use the modified URL
         })
 
     return {"success": True, "images": images, "message": "Images retrieved successfully."}
