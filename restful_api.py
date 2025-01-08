@@ -1,34 +1,30 @@
-import os
-import io
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
+from psycopg2.extras import RealDictCursor
+from datetime import datetime
+import logging
+import psycopg2
 import random
 import uuid
 import json
-import logging
-import psycopg2
-from datetime import datetime
-from pathlib import Path
-from psycopg2.extras import RealDictCursor
-from fastapi import FastAPI, HTTPException, UploadFile, File
-from fastapi.responses import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-from websockets_api import get_prompt_images
+import os
 from dotenv import load_dotenv
 from db_config import DB_CONFIG
-
+from websockets_api import get_prompt_images
 # Load environment variables
 load_dotenv()
 
 SERVER_ADDRESS = os.getenv("SERVER_ADDRESS")
 COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
+RESULTS_PATH = os.getenv("RESULTS_PATH")
 CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
 EXPRESSION_WORKFLOW = os.getenv("EXPRESSION_WORKFLOW")
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,7 +43,6 @@ def save_image(uploaded_file: UploadFile) -> str:
     file_name = f"img_{timestamp}_{unique_id}.jpg"
     file_path = input_path / file_name
 
-    # Save the uploaded image
     try:
         with open(file_path, "wb") as f:
             f.write(uploaded_file.file.read())
@@ -55,7 +50,7 @@ def save_image(uploaded_file: UploadFile) -> str:
         logger.error(f"Error saving image {file_name}: {e}")
         raise HTTPException(status_code=500, detail="Error saving image.")
 
-    return file_name
+    return str(file_path)
 
 # Helper function to execute database queries
 def execute_query(query: str, params: tuple = ()) -> list:
@@ -186,44 +181,58 @@ async def expression_edit(
 #         "message": "Images retrieved successfully."
 #     }
 
+# GET images by ID
 @app.get("/images/{id}")
-def get_images_by_id(id: str):
+def get_images_by_id(id: int):
     query = """
-        SELECT id, file_size, file_type, upload_time, client_id, prompt_id
+        SELECT id, client_id, prompt_id, image_output_path, file_size, file_type, upload_time
         FROM generated_images
         WHERE id = %s
     """
     results = execute_query(query, (id,))
 
     if not results:
-        raise HTTPException(status_code=404, detail="No images found for the given id.")
+        raise HTTPException(status_code=404, detail="No images found for the given ID.")
 
-    images = construct_image_response(results)
-    
-    return {
-        "success": True,
-        "images": images,
-        "message": "Images retrieved successfully."
-    }
+    images = []
+    for row in results:
+        images.append({
+            "id": row["id"],
+            "client_id": row["client_id"],
+            "prompt_id": row["prompt_id"],
+            "file_size": row["file_size"],
+            "file_type": row["file_type"],
+            "upload_time": row["upload_time"],
+            "image_url":(row["image_output_path"])
+        })
 
+    return {"success": True, "images": images, "message": "Images retrieved successfully."}
+
+# GET all images
 @app.get("/images")
 def get_all_images():
     query = """
-        SELECT id, prompt_id, client_id, file_size, file_type, upload_time
+        SELECT id, prompt_id, client_id, image_output_path, file_size, file_type, upload_time
         FROM generated_images
     """
-    results = execute_query(query, (id,))
+    results = execute_query(query)
 
     if not results:
-        raise HTTPException(status_code=404, detail="No images found for the given id.")
+        raise HTTPException(status_code=404, detail="No images found.")
 
-    images = construct_image_response(results)
-    
-    return {
-        "success": True,
-        "images": images,
-        "message": "Images retrieved successfully."
-    }
+    images = []
+    for row in results:
+        images.append({
+            "id": row["id"],
+            "prompt_id": row["prompt_id"],
+            "client_id": row["client_id"],
+            "file_size": row["file_size"],
+            "file_type": row["file_type"],
+            "upload_time": row["upload_time"],
+            "image_url": row["image_output_path"]
+        })
+
+    return {"success": True, "images": images, "message": "Images retrieved successfully."}
 
 # GET all images for a client based on client_id and prompt_id
 # @app.get("/images/{client_id}/{prompt_id}")

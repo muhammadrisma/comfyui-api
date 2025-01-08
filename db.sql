@@ -5,5 +5,5 @@ CREATE TABLE generated_images (
     image_output_path TEXT NOT NULL,
     file_size BIGINT,
     file_type TEXT,
-    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
