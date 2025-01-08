@@ -143,20 +143,11 @@ def get_prompt_images(prompt):
         images = get_images(ws, prompt)
         outputs = []
         
-        # prepare the result direectory
-        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # unique_id = str(uuid.uuid4())
-        # result_dir = Path(RESULTS_PATH)
-        
         for node_id, image_data_list in images.items():
             for image_data in image_data_list:
                 try:
                     image = Image.open(io.BytesIO(image_data))
                     outputs.append(image)
-                    
-                    #save image into specified folder
-                    # output_path = result_dir / f"{client_id}_{timestamp}_{unique_id}.png"
-                    # image.save(output_path)
                 except Exception as e:
                     print(f"Error processing image for node {node_id}: {e}")
 
