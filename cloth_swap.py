@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
 CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
+RESULTS_PATH = os.getenv("RESULTS_PATH")
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
 def save_input_image(img, img_ref):
@@ -30,6 +31,26 @@ def save_input_image(img, img_ref):
     pillow_image_ref.save(str(input_img_ref))  
     
     return input_img.name, input_img_ref.name 
+
+# Save output images into the output folder inside ComfyUI with unique filenames
+# def save_output_images(images):
+#     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+#     unique_id = str(uuid.uuid4())
+
+#     result_dir = Path(RESULTS_PATH)
+#     result_dir.mkdir(parents=True, exist_ok=True)
+
+#     output_filenames = []
+#     for i, img in enumerate(images):
+#         result_img = result_dir / f"output_img_{timestamp}_{unique_id}_{i}.jpg"
+#         if isinstance(img, Image.Image):
+#             img.save(str(result_img))
+#         else: 
+#             pillow_image = Image.fromarray(img)
+#             pillow_image.save(str(result_img))
+#         output_filenames.append(result_img.name)
+
+#     return output_filenames
 
 def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Arm, left_leg, rigth_leg):
     with open(CLOTH_SWAP_WORKFLOW, "r", encoding="utf-8") as f:
@@ -57,6 +78,9 @@ def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Ar
     # print(f"Updated prompt: {json.dumps(prompt, indent=2)}")
     
     images = get_prompt_images(prompt)
+    # Save output images to disk
+    # save_output_images(images)
+    
     return images
 
 # Gradio interface for cloth swapping tool

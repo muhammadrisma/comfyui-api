@@ -4,6 +4,7 @@ import json
 import urllib.parse
 import urllib.request
 import uuid
+from pathlib import Path
 import websocket
 import psycopg2
 from psycopg2.extras import execute_values 
@@ -14,7 +15,8 @@ from db_config import DB_CONFIG
 from dotenv import load_dotenv
 load_dotenv()
 
-SERVER_ADDRESS = os.getenv("SERVER_ADDRESS")
+SERVER_ADDRESS = os.getenv("SERVER_ADDRESS") 
+RESULTS_PATH = os.getenv("RESULTS_PATH")
 client_id = str(uuid.uuid4())
 
 def queue_prompt(prompt):
@@ -39,6 +41,18 @@ def get_image(filename, subfolder, folder_type):
     except Exception as e:
         print(f"Error retrieving image: {e}")
         return None
+
+# Get images url
+def get_image_url(filename, subfolder, folder_type):
+    data = {"filename": filename, "type": folder_type}
+    
+    # Add 'subfolder' to the data only if it's not None
+    if subfolder:
+        data["subfolder"] = subfolder
+    
+    url_values = urllib.parse.urlencode(data)
+    url = "http://{}/view?{}".format(SERVER_ADDRESS, url_values)
+    return url
 
 def get_history(prompt_id):
     try:
@@ -87,7 +101,7 @@ def save_images_to_db(client_id, prompt_id, images):
             image_bytes = io.BytesIO()
             image.save(image_bytes, format="PNG")
             image_data = image_bytes.getvalue()
-
+            
             image_records.append((
                 client_id,
                 prompt_id,
@@ -117,12 +131,21 @@ def get_prompt_images(prompt):
         ws.connect(f"ws://{SERVER_ADDRESS}/ws?clientId={client_id}")
         images = get_images(ws, prompt)
         outputs = []
-
+        
+        # prepare the result direectory
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        unique_id = str(uuid.uuid4())
+        result_dir = Path(RESULTS_PATH)
+        
         for node_id, image_data_list in images.items():
             for image_data in image_data_list:
                 try:
                     image = Image.open(io.BytesIO(image_data))
                     outputs.append(image)
+                    
+                    #save image into specified folder
+                    output_path = result_dir / f"{client_id}_{timestamp}_{unique_id}.png"
+                    image.save(output_path)
                 except Exception as e:
                     print(f"Error processing image for node {node_id}: {e}")
 
