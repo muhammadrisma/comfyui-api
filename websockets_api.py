@@ -96,8 +96,19 @@ def save_images_to_db(client_id, prompt_id, images):
     cursor = conn.cursor()
     image_records = []
     
+    # Prepare the results directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    unique_id = str(uuid.uuid4())
+    result_dir = Path(RESULTS_PATH)
+    result_dir.mkdir(exist_ok=True)
+
     try:
         for image in images:
+            # Save the image to RESULTS_PATH
+            image_output_path = result_dir / f"result_{client_id}_{timestamp}_{unique_id}.png"
+            image.save(image_output_path, format="PNG")
+            
+            # Prepare the image data for database insertion
             image_bytes = io.BytesIO()
             image.save(image_bytes, format="PNG")
             image_data = image_bytes.getvalue()
@@ -105,7 +116,7 @@ def save_images_to_db(client_id, prompt_id, images):
             image_records.append((
                 client_id,
                 prompt_id,
-                psycopg2.Binary(image_data),
+                str(image_output_path),
                 len(image_data),
                 f"image/{image.format.lower()}",
                 datetime.utcnow()
@@ -113,7 +124,7 @@ def save_images_to_db(client_id, prompt_id, images):
         
         if image_records:
             insert_query = """
-            INSERT INTO generated_images (client_id, prompt_id, image_data, file_size, file_type, upload_time)
+            INSERT INTO generated_images (client_id, prompt_id, image_output_path, file_size, file_type, upload_time)
             VALUES %s
             """
             execute_values(cursor, insert_query, image_records)
@@ -133,9 +144,9 @@ def get_prompt_images(prompt):
         outputs = []
         
         # prepare the result direectory
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_id = str(uuid.uuid4())
-        result_dir = Path(RESULTS_PATH)
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # unique_id = str(uuid.uuid4())
+        # result_dir = Path(RESULTS_PATH)
         
         for node_id, image_data_list in images.items():
             for image_data in image_data_list:
@@ -144,8 +155,8 @@ def get_prompt_images(prompt):
                     outputs.append(image)
                     
                     #save image into specified folder
-                    output_path = result_dir / f"{client_id}_{timestamp}_{unique_id}.png"
-                    image.save(output_path)
+                    # output_path = result_dir / f"{client_id}_{timestamp}_{unique_id}.png"
+                    # image.save(output_path)
                 except Exception as e:
                     print(f"Error processing image for node {node_id}: {e}")
 
