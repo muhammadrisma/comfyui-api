@@ -1,0 +1,158 @@
+{
+  "1": {
+    "inputs": {
+      "image": "captain-america-mechanical-shield-full-sleeve-t-shirt-india-model-front-600x800.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Input Image"
+    }
+  },
+  "3": {
+    "inputs": {
+      "mask_grow": 25,
+      "mixed_precision": "fp16",
+      "seed": 520108748357098,
+      "steps": 50,
+      "cfg": 3,
+      "image": [
+        "1",
+        0
+      ],
+      "mask": [
+        "6",
+        1
+      ],
+      "refer_image": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "CatVTONWrapper",
+    "_meta": {
+      "title": "CatVTON Wrapper"
+    }
+  },
+  "6": {
+    "inputs": {
+      "sam_model": "sam_hq_vit_b (379MB)",
+      "grounding_dino_model": "GroundingDINO_SwinT_OGC (694MB)",
+      "threshold": 0.3,
+      "detail_method": "VITMatte",
+      "detail_erode": 6,
+      "detail_dilate": 6,
+      "black_point": 0.01,
+      "white_point": 0.99,
+      "process_detail": true,
+      "prompt": "clothing, pants",
+      "device": "cuda",
+      "max_megapixels": 2,
+      "cache_model": false,
+      "image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "LayerMask: SegmentAnythingUltra V2",
+    "_meta": {
+      "title": "LayerMask: SegmentAnythingUltra V2(Advance)"
+    }
+  },
+  "32": {
+    "inputs": {
+      "mask": [
+        "47",
+        1
+      ]
+    },
+    "class_type": "InvertMask",
+    "_meta": {
+      "title": "InvertMask"
+    }
+  },
+  "35": {
+    "inputs": {
+      "image": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "Image Bounds",
+    "_meta": {
+      "title": "Image Bounds"
+    }
+  },
+  "36": {
+    "inputs": {
+      "blend_factor": 1,
+      "feathering": 0,
+      "target": [
+        "47",
+        0
+      ],
+      "target_mask": [
+        "32",
+        0
+      ],
+      "target_bounds": [
+        "35",
+        0
+      ],
+      "source": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "Bounded Image Blend with Mask",
+    "_meta": {
+      "title": "Bounded Image Blend with Mask"
+    }
+  },
+  "37": {
+    "inputs": {
+      "image": "Screenshot 2025-01-10 144013.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Background Ref"
+    }
+  },
+  "47": {
+    "inputs": {
+      "torchscript_jit": "default",
+      "image": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "InspyrenetRembg",
+    "_meta": {
+      "title": "Inspyrenet Rembg"
+    }
+  },
+  "49": {
+    "inputs": {
+      "image": "9160428e322fb19b1256bedf4d65fdb5.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Cloth Image"
+    }
+  },
+  "50": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "36",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}

@@ -1,5 +1,3 @@
-
-import os
 import uuid
 import json
 import random
@@ -13,7 +11,7 @@ from datetime import datetime
 from db_config import DB_CONFIG
 from websockets_api import get_prompt_images
 from fastapi.staticfiles import StaticFiles
-from settings import COMFY_UI_PATH, RESULTS_PATH, CLOTH_SWAP_WORKFLOW, EXPRESSION_WORKFLOW, API_ADDRESS
+from settings import COMFY_UI_PATH, RESULTS_PATH, CLOTH_SWAP_WORKFLOW, EXPRESSION_WORKFLOW, CLOTH_BACKGROUND_WORKFLOW, API_ADDRESS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -100,12 +98,20 @@ async def cloth_swap(
             "right_leg": right_leg
         })
 
-        prompt["17"]["inputs"]["image"] = save_image(input_image)
-        prompt["18"]["inputs"]["image"] = save_image(ref_image)
+        # Save images and handle saving errors in one block
+        try:
+            prompt["17"]["inputs"]["image"] = save_image(input_image)
+            prompt["18"]["inputs"]["image"] = save_image(ref_image)
+        except HTTPException as save_exception:
+            logger.error(f"Error saving images: {save_exception.detail}")
+            raise save_exception
 
         images = get_prompt_images(prompt)
         return {"success": True, "images": images}
 
+    except json.JSONDecodeError as json_error:
+        logger.error(f"Error decoding JSON from workflow file: {json_error}")
+        raise HTTPException(status_code=500, detail="Workflow file error.")
     except Exception as e:
         logger.error(f"Cloth swap error: {e}")
         raise HTTPException(status_code=500, detail="Cloth swap processing failed.")
@@ -131,7 +137,8 @@ async def expression_edit(
         with open(EXPRESSION_WORKFLOW, "r", encoding="utf-8") as f:
             prompt = json.load(f)
 
-        prompt["14"]["inputs"].update({
+        # Create a dictionary for inputs to avoid repetitive code
+        inputs = {
             "rotate_pitch": rotate_pitch,
             "rotate_yaw": rotate_yaw,
             "rotate_roll": rotate_roll,
@@ -144,37 +151,71 @@ async def expression_edit(
             "eee": eee,
             "woo": woo,
             "smile": smile
-        })
+        }
 
-        prompt["15"]["inputs"]["image"] = save_image(input_image)
+        prompt["14"]["inputs"].update(inputs)
 
+        # Save the image and handle potential errors
+        try:
+            prompt["15"]["inputs"]["image"] = save_image(input_image)
+        except Exception as e:
+            logger.error(f"Error saving input image: {e}")
+            raise HTTPException(status_code=500, detail="Error saving input image.")
+
+        # get_prompt_images could raise its own errors
         images = get_prompt_images(prompt)
         return {"success": True, "images": images}
 
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON from workflow file: {e}")
+        raise HTTPException(status_code=500, detail="Workflow file error.")
     except Exception as e:
         logger.error(f"Expression editing error: {e}")
         raise HTTPException(status_code=500, detail="Expression editing processing failed.")
 
-# GET all images for a client based on client_id
-# @app.get("/images/{client_id}")
-# def get_images_by_client_id(client_id: str):
-#     query = """
-#         SELECT id, file_size, file_type, upload_time
-#         FROM generated_images
-#         WHERE client_id = %s
-#     """
-#     results = execute_query(query, (client_id,))
+# Endpoint for cloth and background replacement
+@app.post("/cloth-background")
+async def cloth_background(
+    input_img: UploadFile = File(...),
+    input_img_cloth: UploadFile = File(...),
+    input_img_bg: UploadFile = File(...),
+    prompt_clothing_type: str = "clothing,"
+):
+    try:
+        # Load the workflow prompt
+        with open(CLOTH_BACKGROUND_WORKFLOW, "r", encoding="utf-8") as f:
+            prompt = json.load(f)
 
-#     if not results:
-#         raise HTTPException(status_code=404, detail="No images found for the given client_id.")
+        # Generate a random seed
+        prompt["3"]["inputs"]["seed"] = random.randint(0, 999999999999999)
 
-#     images = construct_image_response(results)
-    
-#     return {
-#         "success": True,
-#         "images": images,
-#         "message": "Images retrieved successfully."
-#     }
+        # Validate prompt clothing type
+        final_prompt = prompt_clothing_type.strip() or "clothing, pants"
+        if len(final_prompt) > 100:
+            logger.error("Prompt clothing type is too long")
+            raise HTTPException(status_code=400, detail="Prompt clothing type is too long")
+
+        prompt["6"]["inputs"]["prompt"] = final_prompt
+
+        # Map the input images into the workflow and handle saving
+        try:
+            prompt["1"]["inputs"]["image"] = save_image(input_img)
+            prompt["49"]["inputs"]["image"] = save_image(input_img_cloth)
+            prompt["37"]["inputs"]["image"] = save_image(input_img_bg)
+        except Exception as e:
+            logger.error(f"Error saving one or more images: {e}")
+            raise HTTPException(status_code=500, detail="Error saving images.")
+
+        # Process the images and return the result
+        images = get_prompt_images(prompt)
+        return {"success": True, "images": images}
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Error reading workflow file: {e}")
+        raise HTTPException(status_code=500, detail="Workflow file error.")
+    except Exception as e:
+        logger.error(f"Cloth background processing error: {e}")
+        raise HTTPException(status_code=500, detail="Cloth background processing failed.")
 
 # GET images by ID
 @app.get("/images/{id}")
@@ -232,48 +273,6 @@ def get_all_images():
         })
 
     return {"success": True, "images": images, "message": "Images retrieved successfully."}
-
-# GET all images for a client based on client_id and prompt_id
-# @app.get("/images/{client_id}/{prompt_id}")
-# def get_images_by_client_and_prompt(client_id: str, prompt_id: str):
-#     query = """
-#         SELECT id, file_size, file_type, upload_time
-#         FROM generated_images
-#         WHERE client_id = %s AND prompt_id = %s
-#     """
-#     results = execute_query(query, (client_id, prompt_id))
-
-#     if not results:
-#         raise HTTPException(status_code=404, detail="No images found for the given client_id and prompt_id.")
-
-#     images = construct_image_response(results)
-
-#     return {
-#         "success": True,
-#         "images": images,
-#         "message": "Images retrieved successfully."
-#     }
-
-# @app.get("/images/{image_id}")
-# def get_image_by_id(image_id: int):
-#     query = """
-#         SELECT image_data, file_type
-#         FROM generated_images
-#         WHERE id = %s
-#     """
-#     result = execute_query(query, (image_id,))
-
-#     if not result:
-#         raise HTTPException(status_code=404, detail="Image not found.")
-    
-#     image_data = result[0]["image_data"]
-#     file_type = result[0]["file_type"]
-
-#     return StreamingResponse(
-#         io.BytesIO(image_data),
-#         media_type=file_type,
-#         headers={"Content-Disposition": f"inline; filename=image_{image_id}.png"},
-#     )
 
 if __name__ == "__main__":
     import uvicorn

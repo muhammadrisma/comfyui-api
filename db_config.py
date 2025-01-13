@@ -1,8 +1,7 @@
-import os
 from settings import DB_NAME, DB_USER, DB_HOST, DB_PORT
 from dotenv import load_dotenv
 load_dotenv()
-DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_PASSWORD = "akulaku23"
 
 
 DB_CONFIG = {
