@@ -6,11 +6,7 @@ from pathlib import Path
 import gradio as gr
 from PIL import Image
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-
-load_dotenv()
-COMFY_UI_PATH = Path(os.getenv("COMFY_UI_PATH"))
-EXPRESSION_WORKFLOW = Path(os.getenv("EXPRESSION_WORKFLOW"))
+from settings import COMFY_UI_PATH, EXPRESSION_WORKFLOW
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
 def save_input_image(img):

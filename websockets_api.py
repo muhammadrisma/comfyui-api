@@ -1,34 +1,42 @@
+import os
 import io
 import json
 import urllib.parse
 import urllib.request
 import uuid
+from pathlib import Path
 import websocket
+import psycopg2
+from psycopg2.extras import execute_values 
 from PIL import Image
+from datetime import datetime
+from db_config import DB_CONFIG
+from settings import SERVER_ADDRESS, RESULTS_PATH
 
-from settings import SERVER_ADDRESS
-
-SERVER_ADDRESS = os.getenv("SERVER_ADDRESS")
 client_id = str(uuid.uuid4())
 
 def queue_prompt(prompt):
     p = {"prompt": prompt, "client_id": client_id}
     data = json.dumps(p).encode("utf-8")
-    req = urllib.request.Request("http://{}/prompt".format(server_address), data=data)
-    return json.loads(urllib.request.urlopen(req).read())
+    req = urllib.request.Request(f"http://{SERVER_ADDRESS}/prompt", data=data)
+    try:
+        response = urllib.request.urlopen(req)
+        return json.loads(response.read())
+    except Exception as e:
+        print(f"Error queuing prompt: {e}")
+        return {}
 
 def get_image(filename, subfolder, folder_type):
     data = {"filename": filename, "type": folder_type}
-    
-    # Add 'subfolder' to the data only if it's not None
     if subfolder:
         data["subfolder"] = subfolder
-    
     url_values = urllib.parse.urlencode(data)
-    with urllib.request.urlopen(
-        "http://{}/view?{}".format(server_address, url_values)
-    ) as response:
-        return response.read()
+    try:
+        with urllib.request.urlopen(f"http://{SERVER_ADDRESS}/view?{url_values}") as response:
+            return response.read()
+    except Exception as e:
+        print(f"Error retrieving image: {e}")
+        return None
 
 # Get images url
 def get_image_url(filename, subfolder, folder_type):
@@ -43,45 +51,36 @@ def get_image_url(filename, subfolder, folder_type):
     return url
 
 def get_history(prompt_id):
-    with urllib.request.urlopen(
-        "http://{}/history/{}".format(server_address, prompt_id)
-    ) as response:
-        return json.loads(response.read())
+    try:
+        with urllib.request.urlopen(f"http://{SERVER_ADDRESS}/history/{prompt_id}") as response:
+            return json.loads(response.read())
+    except Exception as e:
+        print(f"Error retrieving history: {e}")
+        return {}
 
 def get_images(ws, prompt):
-    prompt_id = queue_prompt(prompt)["prompt_id"]
+    prompt_id = queue_prompt(prompt).get("prompt_id")
     output_images = {}
+
     while True:
-        out = ws.recv()
-        if isinstance(out, str):
-            message = json.loads(out)
-            if message["type"] == "executing":
-                data = message["data"]
-                if data["node"] is None and data["prompt_id"] == prompt_id:
-                    break  # Execution is done
-        else:
-            continue  # Previews are binary data
+        try:
+            out = ws.recv()
+            if isinstance(out, str):
+                message = json.loads(out)
+                if message["type"] == "executing" and message["data"].get("node") is None and message["data"].get("prompt_id") == prompt_id:
+                    break
+        except websocket.WebSocketException as e:
+            print(f"WebSocket error: {e}")
+            break
 
-    history = get_history(prompt_id)[prompt_id]
-    for _ in history["outputs"]:
-        for node_id in history["outputs"]:
-            node_output = history["outputs"][node_id]
-            if "images" in node_output:
-                images_output = []
-                for image in node_output["images"]:
-                    try:
-                        # Use .get() to safely access keys and handle missing 'subfolder'
-                        image_data = get_image(
-                            filename=image.get("filename"),
-                            subfolder=image.get("subfolder"),  # Might be None
-                            folder_type=image.get("type")
-                        )
-                        images_output.append(image_data)
-                    except Exception as e:
-                        print(f"Error retrieving image for node {node_id}: {e}")
-            else:
-                images_output = []
-
+    history = get_history(prompt_id).get(prompt_id, {})
+    for node_id, node_output in history.get("outputs", {}).items():
+        if "images" in node_output:
+            images_output = []
+            for image in node_output["images"]:
+                image_data = get_image(image.get("filename"), image.get("subfolder"), image.get("type"))
+                if image_data:
+                    images_output.append(image_data)
             output_images[node_id] = images_output
 
     return output_images
@@ -93,16 +92,27 @@ def save_images_to_db(client_id, prompt_id, images):
     cursor = conn.cursor()
     image_records = []
     
+    # Prepare the results directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    unique_id = str(uuid.uuid4())
+    result_dir = Path(RESULTS_PATH)
+    result_dir.mkdir(exist_ok=True)
+
     try:
         for image in images:
+            # Save the image to RESULTS_PATH
+            image_output_path = result_dir / f"result_{client_id}_{timestamp}_{unique_id}.png"
+            image.save(image_output_path, format="PNG")
+            
+            # Prepare the image data for database insertion
             image_bytes = io.BytesIO()
             image.save(image_bytes, format="PNG")
             image_data = image_bytes.getvalue()
-
+            
             image_records.append((
                 client_id,
                 prompt_id,
-                psycopg2.Binary(image_data),
+                str(image_output_path),
                 len(image_data),
                 f"image/{image.format.lower()}",
                 datetime.utcnow()
@@ -110,7 +120,7 @@ def save_images_to_db(client_id, prompt_id, images):
         
         if image_records:
             insert_query = """
-            INSERT INTO generated_images (client_id, prompt_id, image_data, file_size, file_type, upload_time)
+            INSERT INTO generated_images (client_id, prompt_id, image_output_path, file_size, file_type, upload_time)
             VALUES %s
             """
             execute_values(cursor, insert_query, image_records)
@@ -128,7 +138,7 @@ def get_prompt_images(prompt):
         ws.connect(f"ws://{SERVER_ADDRESS}/ws?clientId={client_id}")
         images = get_images(ws, prompt)
         outputs = []
-
+        
         for node_id, image_data_list in images.items():
             for image_data in image_data_list:
                 try:

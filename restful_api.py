@@ -10,18 +10,10 @@ from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
-from dotenv import load_dotenv
 from db_config import DB_CONFIG
 from websockets_api import get_prompt_images
 from fastapi.staticfiles import StaticFiles
-# Load environment variables
-load_dotenv()
-
-SERVER_ADDRESS = os.getenv("SERVER_ADDRESS") 
-COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
-RESULTS_PATH = os.getenv("RESULTS_PATH")
-CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
-EXPRESSION_WORKFLOW = os.getenv("EXPRESSION_WORKFLOW")
+from settings import COMFY_UI_PATH, RESULTS_PATH, CLOTH_SWAP_WORKFLOW, EXPRESSION_WORKFLOW, API_ADDRESS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -70,7 +62,7 @@ def execute_query(query: str, params: tuple = ()) -> list:
 def construct_image_response(results) -> list:
     return [
         {
-            "url": f"http://{SERVER_ADDRESS}/images/{row['id']}",
+            "url": f"http://{API_ADDRESS}/images/{row['id']}",
             "file_size": row["file_size"],
             "file_type": row["file_type"],
             "upload_time": row["upload_time"].isoformat(),
@@ -200,7 +192,7 @@ def get_images_by_id(id: int):
     images = []
     for row in results:
         # Modify the image_output_path to use the server URL
-        image_url = f"http://{SERVER_ADDRESS}/results/{Path(row['image_output_path']).name}"
+        image_url = f"http://{API_ADDRESS}/results/{Path(row['image_output_path']).name}"
         images.append({
             "id": row["id"],
             "client_id": row["client_id"],
@@ -228,7 +220,7 @@ def get_all_images():
     images = []
     for row in results:
         # Modify the image_output_path to use the server URL
-        image_url = f"http://{SERVER_ADDRESS}/results/{Path(row['image_output_path']).name}"
+        image_url = f"http://{API_ADDRESS}/results/{Path(row['image_output_path']).name}"
         images.append({
             "id": row["id"],
             "prompt_id": row["prompt_id"],

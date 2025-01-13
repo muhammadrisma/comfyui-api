@@ -1,3 +1,5 @@
 .myenv/
 .__pycache__/
 .env
+.gradio/
+# .results/

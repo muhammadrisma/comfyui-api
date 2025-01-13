@@ -7,12 +7,7 @@ from pathlib import Path
 import gradio as gr
 from PIL import Image
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-
-load_dotenv()
-COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
-CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
-RESULTS_PATH = os.getenv("RESULTS_PATH")
+from settings import COMFY_UI_PATH, CLOTH_SWAP_WORKFLOW
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
 def save_input_image(img, img_ref):
