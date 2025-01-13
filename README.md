@@ -52,15 +52,8 @@ The **Cloth Swap API** allows users to swap clothes between images using the Com
 ## Requirements
 1. Install the ComfyUI framework.
 2. Create a `.env` file in your working directory with these variables:
-   - `SERVER_ADDRESS`
-   - `COMFY_UI_PATH`
-   - `CLOTH_SWAP_WORKFLOW`
-   - `EXPRESSION_WORKFLOW`
-   - `DB_NAME`
-   - `DB_USER`
    - `DB_PASSWORD`
-   - `DB_HOST`
-   - `DB_PORT`
+
 
 3. Install required libraries:
    ```bash
