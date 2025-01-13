@@ -126,11 +126,13 @@ your_project_directory/
 ### Outputs
 Both tools display processed images in output galleries.
 
-### Interface Previews
-1. **Cloth Swap**: ![Cloth Swap Interface](Interface%20demo/cloth_swap.png)
-2. **Expression Editing**: ![Expression Editing Interface](Interface%20demo/expression.png)
-3. **.env**: ![.env File](Interface%20demo/env.png)
-
+## Interface Previews
+1. **Cloth Swap**: ![Cloth Swap Interface](demo/cloth_swap.png)
+2. **Expression Editing**: ![Expression Editing Interface](demo/expression.png)
+3. **Cloth and Background Editing**: 
+   - ![Cloth and Background Editing Interface 1](demo/cloth_background_1.png)
+   - ![Cloth and Background Editing Interface 2](demo/cloth_background_2.png)
+   
 ## References
 - ComfyUI Workflow:
   1. Expression Editing: [Video Link](https://www.youtube.com/watch?v=q0Vf-ZZsbzI&t=150s)
