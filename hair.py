@@ -93,7 +93,7 @@ hairstyles = {
     "Windy Day": "A braided headband keeps hair secure while remaining stylish, ideal for a windy day."
 }
 
-def process(img, hair_color, hair_length, hairstyle, slider):
+def process(img, hair_color, hairstyle, slider):
     try:
         with open(HAIR_WORKFLOW, "r", encoding="utf-8") as f:
             prompt = json.load(f)
@@ -101,7 +101,7 @@ def process(img, hair_color, hair_length, hairstyle, slider):
         prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         
         # Set the hairstyle description
-        text2 = f"{hairstyle}, with {hair_color} hair and {hair_length} hair."
+        text2 = f"{hairstyle}, with {hair_color} hair"
 
         prompt["228"]["inputs"]["text"] = text2
         prompt["156"]["inputs"]["denoise"] = slider
@@ -120,7 +120,6 @@ def process(img, hair_color, hair_length, hairstyle, slider):
         raise HTTPException(status_code=500, detail="Expression editing processing failed.")
     
 hair_color_choices = ["-", "Black", "Brown", "Blonde", "Red", "Pink", "Blue", "Green", "Purple", "White", "Grey"]
-hair_length_choices = ["-", "Short", "Medium", "Long"]
 hairstyle_choices = list(hairstyles.keys()) # Use the keys of the dictionary for hairstyle options
 
 def hair_interface():
@@ -129,7 +128,6 @@ def hair_interface():
         inputs=[
             gr.Image(type="numpy", label="Upload Image"),  # Input as numpy array
             gr.Dropdown(choices=hair_color_choices, label="Hair Color"),  # Dropdown for hair color
-            gr.Dropdown(choices=hair_length_choices, label="Hair Length"),  # Dropdown for hair length
             gr.Dropdown(choices=hairstyle_choices, label="Hairstyle"),  # Dropdown for hairstyle
             gr.Slider(minimum=0, maximum=1, step=0.01, value=1, label="Weight")  # Slider input
         ],

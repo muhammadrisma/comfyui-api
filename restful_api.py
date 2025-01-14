@@ -336,7 +336,6 @@ async def hair_edit(
     img: UploadFile = File(...),
     hair_color: str="-",
     hairstyle: str="-",
-    hair_length: str="-",
     slider: float =0
     ):
     try:
@@ -346,7 +345,7 @@ async def hair_edit(
         prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         
         # Set the hairstyle description
-        text2 = f"{hairstyle}, with {hair_color} hair and {hair_length} hair."
+        text2 = f"{hairstyle}, with {hair_color} hair"
 
         prompt["228"]["inputs"]["text"] = text2
         prompt["156"]["inputs"]["denoise"] = slider
