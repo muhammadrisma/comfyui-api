@@ -2,4 +2,4 @@
 .__pycache__
 .env
 .gradio
-# .results/
+.results/

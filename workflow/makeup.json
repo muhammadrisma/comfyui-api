@@ -1,0 +1,144 @@
+{
+  "1": {
+    "inputs": {
+      "image": "ba96bce819afb69cefd1e59a9f415779.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "2": {
+    "inputs": {
+      "ckpt_name": "epicphotogasm_v4One4All.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "6": {
+    "inputs": {
+      "text": "natural"
+    },
+    "class_type": "JjkText"
+  },
+  "7": {
+    "inputs": {
+      "seed": 345160308926915
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "8": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "2",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer"
+  },
+  "9": {
+    "inputs": {
+      "makeup_style": "Boho Makeup",
+      "makeup_color": "-",
+      "eyeshadow": true,
+      "eyeliner": true,
+      "mascara": true,
+      "blush": true,
+      "lipstick": true,
+      "lip_gloss": true,
+      "active": true,
+      "text_in": [
+        "6",
+        0
+      ],
+      "seed": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "PortraitMasterMakeup"
+  },
+  "10": {
+    "inputs": {
+      "text": "bad eyes, cgi, airbrushed, plastic, deformed, watermark, blur, glitch, broken, accessories",
+      "clip": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "11": {
+    "inputs": {
+      "pixels": [
+        "1",
+        0
+      ],
+      "vae": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "12": {
+    "inputs": {
+      "text": [
+        "9",
+        0
+      ],
+      "clip": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "13": {
+    "inputs": {
+      "seed": 955273627993656,
+      "steps": 30,
+      "cfg": 9.040000000000001,
+      "sampler_name": "euler",
+      "scheduler": "exponential",
+      "denoise": 0.5,
+      "model": [
+        "2",
+        0
+      ],
+      "positive": [
+        "12",
+        0
+      ],
+      "negative": [
+        "10",
+        0
+      ],
+      "latent_image": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "14": {
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "15": {
+    "inputs": {
+      "images": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  }
+}

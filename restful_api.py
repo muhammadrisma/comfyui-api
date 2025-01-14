@@ -11,8 +11,7 @@ from datetime import datetime
 from db_config import DB_CONFIG
 from websockets_api import get_prompt_images
 from fastapi.staticfiles import StaticFiles
-from settings import COMFY_UI_PATH, RESULTS_PATH, CLOTH_SWAP_WORKFLOW, EXPRESSION_WORKFLOW, CLOTH_BACKGROUND_WORKFLOW, API_ADDRESS
-
+from settings import COMFY_UI_PATH, RESULTS_PATH, CLOTH_SWAP_WORKFLOW, EXPRESSION_WORKFLOW, CLOTH_BACKGROUND_WORKFLOW, MAKEUP_WORKFLOW, EYEDETAILS_WORKFLOW, EYE_LIP_FACE_WORKFLOW, HAIR_WORKFLOW,API_ADDRESS
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -216,6 +215,150 @@ async def cloth_background(
     except Exception as e:
         logger.error(f"Cloth background processing error: {e}")
         raise HTTPException(status_code=500, detail="Cloth background processing failed.")
+
+# Endpoint for makeup editing
+@app.post("/makeup-edit/")
+async def makeup_edit(
+    img: UploadFile = File(...),
+    makeup_style: str = "-",
+    eyeshadow: bool = False,
+    eyeliner: bool = False,
+    mascara: bool = False,
+    blush : bool = False,
+    lipstick: bool = False,
+    lip_gloss: bool = False,
+    slider: float =0
+    ):
+
+    try:
+        with open(MAKEUP_WORKFLOW, "r", encoding="utf-8") as f:
+            prompt = json.load(f)
+
+        # Validate and convert slider value
+        try:
+            slider_value = float(slider)
+        except ValueError:
+            raise ValueError(f"Invalid slider value: {slider}. Please provide a number between 0 and 1.")
+
+        # Set dynamic inputs in the workflow
+        prompt["13"]["inputs"]["denoise"] = slider_value
+        prompt["9"]["inputs"].update({
+            "makeup_style": makeup_style,
+            "eyeshadow": eyeshadow == "True",
+            "eyeliner": eyeliner == "True",
+            "mascara": mascara == "True",
+            "blush": blush == "True",
+            "lipstick": lipstick == "True",
+            "lip_gloss": lip_gloss == "True"
+        })
+
+        # Save the input image
+        prompt["1"]["inputs"]["image"] = save_image(img)
+
+        # Call the image generation function
+        images = get_prompt_images(prompt)
+        return images
+
+    except Exception as e:
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
+
+# Endpoint for eye_details
+@app.post("/eye_details-edit/")
+async def eye_details_edit(
+    img: UploadFile = File(...),
+    freckles: float = 0,
+    eyes_details: float = 0,
+    iris_details: float = 0,
+    circular_iris: float = 0,
+    circular_pupil: float = 0
+):
+    try:
+        with open(EYEDETAILS_WORKFLOW, "r", encoding="utf-8") as f:
+            prompt = json.load(f)
+
+        # Set a random seed for reproducibility
+        prompt["8"]["inputs"]["seed"] = random.randint(0,999999999999999)
+        prompt["5"]["inputs"].update({
+            "freckles": freckles =="False",
+            "eyes detail": eyes_details =="True",
+            "iris detail" : iris_details == "True",
+            "circular iris": circular_iris == "True",
+            "circular pupil": circular_pupil == "True",
+        })
+        prompt["1"]["inputs"]["image"] = save_image(img)
+        
+        images = get_prompt_images(prompt)
+        return images
+
+    except Exception as e:
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
+
+# Endpoint for eye_lip_face editing
+@app.post("/eye_lip_face-edit/")
+async def eye_lip_face_edit(
+    img: UploadFile = File(...),
+    eyes_color: bool=True,
+    eyes_shape: bool=True,
+    lips_color: bool=True,
+    lips_shape: bool=True,
+    face_shape: bool=True,
+    slider: float =0
+    ):
+    try:
+        with open(EYE_LIP_FACE_WORKFLOW, "r", encoding="utf-8") as f:
+            prompt = json.load(f)
+
+        # Set a random seed for reproducibility
+        prompt["27"]["inputs"]["seed"] = random.randint(0,9999999999999999)
+        prompt["21"]["inputs"]["face_shape_weight"] = slider
+        prompt["21"]["inputs"].update({
+            "eyes color": eyes_color =="True",
+            "eyes shape" : eyes_shape == "True",
+            "lip color": lips_color == "True",
+            "lip shape": lips_shape == "True",
+            "face shape": face_shape == "True"
+        })
+
+        prompt["14"]["inputs"]["image"] = save_image(img)
+        
+        images = get_prompt_images(prompt)
+        return images
+
+    except Exception as e:
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
+
+@app.post("/hair-edit/")
+async def hair_edit(
+    img: UploadFile = File(...),
+    hair_color: str="-",
+    hairstyle: str="-",
+    hair_length: str="-",
+    slider: float =0
+    ):
+    try:
+        with open(HAIR_WORKFLOW, "r", encoding="utf-8") as f:
+            prompt = json.load(f)
+
+        prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
+        
+        # Set the hairstyle description
+        text2 = f"{hairstyle}, with {hair_color} hair and {hair_length} hair."
+
+        prompt["228"]["inputs"]["text"] = text2
+        prompt["156"]["inputs"]["denoise"] = slider
+
+        prompt["138"]["inputs"]["image"] = save_image(img)
+
+        # Call the function to process the prompt and get the result images
+        images = get_prompt_images(prompt)
+        return images
+    
+    except Exception as e:
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
 
 # GET images by ID
 @app.get("/images/{id}")
