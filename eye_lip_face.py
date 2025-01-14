@@ -35,11 +35,11 @@ def process(img, eyes_color, eyes_shape, lips_color, lips_shape, face_shape, sli
         prompt["27"]["inputs"]["seed"] = random.randint(0,9999999999999999)
         prompt["21"]["inputs"]["face_shape_weight"] = slider
         prompt["21"]["inputs"].update({
-            "eyes color": eyes_color =="True",
-            "eyes shape" : eyes_shape == "True",
-            "lip color": lips_color == "True",
-            "lip shape": lips_shape == "True",
-            "face shape": face_shape == "True"
+            "eyes color": eyes_color,
+            "eyes shape" : eyes_shape,
+            "lip color": lips_color,
+            "lip shape": lips_shape,
+            "face shape": face_shape
         })
         img_filename = save_input_image(img)
 
