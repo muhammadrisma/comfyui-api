@@ -7,13 +7,8 @@ import gradio as gr
 from PIL import Image
 import random
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-import urllib.request
-from urllib.error import HTTPError, URLError
-
-load_dotenv()
-COMFY_UI_PATH = Path(os.getenv("COMFY_UI_PATH"))
-EYE_LIP_FACE_WORKFLOW = Path(os.getenv("EYE_LIP_FACE_WORKFLOW"))
+from settings import EYE_LIP_FACE_WORKFLOW, COMFY_UI_PATH
+from fastapi import HTTPException
 
 def save_input_image(img):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -42,7 +37,7 @@ def process(img, eyes_color, eyes_shape, lips_color, lips_shape, face_shape, sli
             "eyes shape" : eyes_shape == "True",
             "lip color": lips_color == "True",
             "lip shape": lips_shape == "True",
-            "face shape": face_shape == "True",
+            "face shape": face_shape == "True"
         })
         img_filename = save_input_image(img)
 
@@ -51,17 +46,9 @@ def process(img, eyes_color, eyes_shape, lips_color, lips_shape, face_shape, sli
         images = get_prompt_images(prompt)
         return images
     
-    except HTTPError as e:
-        print(f"HTTPError: {e.code} - {e.reason}")
-        return None
-    
-    except URLError as e:
-        print(f"URLError: {e.reason}")
-        return None
-    
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
 
 # Gradio interface for cloth swapping tool
 def eye_lip_face_interface():

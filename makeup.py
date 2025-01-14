@@ -7,13 +7,7 @@ from pathlib import Path
 import gradio as gr
 from PIL import Image
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-import urllib.request
-from urllib.error import HTTPError, URLError
-
-load_dotenv()
-COMFY_UI_PATH = Path(os.getenv("COMFY_UI_PATH"))
-MAKEUP_WORKFLOW = Path(os.getenv("MAKEUP_WORKFLOW"))
+from settings import MAKEUP_WORKFLOW, COMFY_UI_PATH
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
 def save_input_image(img):
@@ -57,17 +51,9 @@ def process(img, makeup_style, eyeshadow, eyeliner, mascara, blush, lipstick, li
         images = get_prompt_images(prompt)
         return images
 
-    except HTTPError as e:
-        print(f"HTTPError: {e.code} - {e.reason}")
-        return None
-    
-    except URLError as e:
-        print(f"URLError: {e.reason}")
-        return None
-    
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
 
 # Gradio interface for cloth swapping tool
 def makeup_interface():

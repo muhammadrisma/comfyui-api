@@ -9,14 +9,8 @@ import random
 import random
 from PIL import Image
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-import urllib.request
-from urllib.error import HTTPError, URLError
-
-
-load_dotenv()
-COMFY_UI_PATH = Path(os.getenv("COMFY_UI_PATH"))
-HAIR_WORKFLOW = Path(os.getenv("HAIR_WORKFLOW"))
+from settings import HAIR_WORKFLOW, COMFY_UI_PATH
+from fastapi import HTTPException
 
 def save_input_image(img):
     if isinstance(img, str):
@@ -99,9 +93,8 @@ hairstyles = {
     "Windy Day": "A braided headband keeps hair secure while remaining stylish, ideal for a windy day."
 }
 
-def process(image, hair_color, hair_length, hairstyle, slider):
+def process(img, hair_color, hair_length, hairstyle, slider):
     try:
-        # Load the workflow JSON
         with open(HAIR_WORKFLOW, "r", encoding="utf-8") as f:
             prompt = json.load(f)
 
@@ -114,8 +107,7 @@ def process(image, hair_color, hair_length, hairstyle, slider):
         prompt["156"]["inputs"]["denoise"] = slider
 
         # Save the image and get its path
-        img_filename = save_input_image(image)
-        
+        img_filename = save_input_image(img)
         # Convert Path to string to avoid serialization issues
         prompt["138"]["inputs"]["image"] = str(img_filename)
 
@@ -123,17 +115,9 @@ def process(image, hair_color, hair_length, hairstyle, slider):
         images = get_prompt_images(prompt)
         return images
     
-    except HTTPError as e:
-        print(f"HTTPError: {e.code} - {e.reason}")
-        return None
-    
-    except URLError as e:
-        print(f"URLError: {e.reason}")
-        return None
-    
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
     
 hair_color_choices = ["-", "Black", "Brown", "Blonde", "Red", "Pink", "Blue", "Green", "Purple", "White", "Grey"]
 hair_length_choices = ["-", "Short", "Medium", "Long"]

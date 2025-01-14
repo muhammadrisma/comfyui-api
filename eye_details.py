@@ -7,13 +7,8 @@ import gradio as gr
 import random
 from PIL import Image
 from websockets_api import get_prompt_images
-from dotenv import load_dotenv
-import urllib.request
-from urllib.error import HTTPError, URLError
-
-load_dotenv()
-COMFY_UI_PATH = Path(os.getenv("COMFY_UI_PATH"))
-EYEDETAILS_WORKFLOW = Path(os.getenv("EYEDETAILS_WORKFLOW"))
+from settings import EYEDETAILS_WORKFLOW, COMFY_UI_PATH
+from fastapi import HTTPException
 
 def save_input_image(img):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -37,11 +32,11 @@ def process(img,freckles,eyes_details, iris_details, circular_iris, circular_pup
         # Set a random seed for reproducibility
         prompt["8"]["inputs"]["seed"] = random.randint(0,999999999999999)
         prompt["5"]["inputs"].update({
-            "freckles": freckles =="True",
+            "freckles": freckles =="False",
             "eyes detail": eyes_details =="True",
             "iris detail" : iris_details == "True",
             "circular iris": circular_iris == "True",
-            "circular pupil": circular_pupil == "True",
+            "circular pupil": circular_pupil == "True"
         })
         img_filename = save_input_image(img)
 
@@ -50,17 +45,9 @@ def process(img,freckles,eyes_details, iris_details, circular_iris, circular_pup
         images = get_prompt_images(prompt)
         return images
     
-    except HTTPError as e:
-        print(f"HTTPError: {e.code} - {e.reason}")
-        return None
-    
-    except URLError as e:
-        print(f"URLError: {e.reason}")
-        return None
-    
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
+        logger.error(f"Expression editing error: {e}")
+        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
     
 # Gradio interface for cloth swapping tool
 def eyedetails_interface():

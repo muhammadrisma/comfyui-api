@@ -8,15 +8,12 @@ import gradio as gr
 from PIL import Image
 from websockets_api import get_prompt_images
 from dotenv import load_dotenv
-import urllib.request
-from urllib.error import HTTPError, URLError
 
 load_dotenv()
 COMFY_UI_PATH = os.getenv("COMFY_UI_PATH")
 CLOTH_SWAP_WORKFLOW = os.getenv("CLOTH_SWAP_WORKFLOW")
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
-
 def save_input_image(img, img_ref):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_id = str(uuid.uuid4())
@@ -34,44 +31,33 @@ def save_input_image(img, img_ref):
     
     return input_img.name, input_img_ref.name 
 
-def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Arm):
-    try:
-        with open(CLOTH_SWAP_WORKFLOW, "r", encoding="utf-8") as f:
-            prompt = json.load(f)
+def process(img, img_ref, top_clothes, bottom_clothes, torso, left_Arm, right_Arm, left_leg, rigth_leg):
+    with open(CLOTH_SWAP_WORKFLOW, "r", encoding="utf-8") as f:
+        prompt = json.load(f)
 
-        # Set a random seed for reproducibility
-        prompt["1"]["inputs"]["seed"] = random.randint(0, 999999999999999)
+    # Set a random seed for reproducibility
+    prompt["1"]["inputs"]["seed"] = random.randint(0, 999999999999999)
 
-        # Map the top_clothes and bottom_clothes inputs
-        prompt["13"]["inputs"].update({
-            "top_clothes" : top_clothes == "True",
-            "bottom_clothes": bottom_clothes == "True",
-            "torso_skin": torso == "True",
-            "left_arm": left_Arm == "True",
-            "right_arm": right_Arm == "True",
-        })
-        img_filename, img_ref_filename = save_input_image(img, img_ref)
+    # Map the top_clothes and bottom_clothes inputs
+    prompt["13"]["inputs"].update({
+        "top_clothes" : top_clothes == "True",
+        "bottom_clothes": bottom_clothes == "True",
+        "torso_skin": torso == "True",
+        "left_arm": left_Arm == "True",
+        "right_arm": right_Arm == "True",
+        "left_leg": left_leg == "True",
+        "right_leg": rigth_leg == "True"
+    })
+    img_filename, img_ref_filename = save_input_image(img, img_ref)
 
-        # Map the input images into the workflow
-        prompt["17"]["inputs"]["image"] = img_filename
-        prompt["18"]["inputs"]["image"] = img_ref_filename
+    # Map the input images into the workflow
+    prompt["17"]["inputs"]["image"] = img_filename
+    prompt["18"]["inputs"]["image"] = img_ref_filename
 
-        # print(f"Updated prompt: {json.dumps(prompt, indent=2)}")
-        
-        images = get_prompt_images(prompt)
-        return images
+    # print(f"Updated prompt: {json.dumps(prompt, indent=2)}")
     
-    except HTTPError as e:
-        print(f"HTTPError: {e.code} - {e.reason}")
-        return None
-    
-    except URLError as e:
-        print(f"URLError: {e.reason}")
-        return None
-    
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
+    images = get_prompt_images(prompt)
+    return images
 
 # Gradio interface for cloth swapping tool
 def create_cloth_swapping_interface():
@@ -85,6 +71,8 @@ def create_cloth_swapping_interface():
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Torso (True/False): "),
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Left Arm (True/False): "),
             gr.Dropdown(value="False", choices=["True", "False"], label="Target Right Arm (True/False): "),
+            gr.Dropdown(value="False", choices=["True", "False"], label="Target Left Leg (True/False): "),
+            gr.Dropdown(value="False", choices=["True", "False"], label="Target Right Leg (True/False): ")
         ],
         outputs=[gr.Gallery(label="Outputs: ", height=500)]
     )
