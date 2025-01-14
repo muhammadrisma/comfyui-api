@@ -61,7 +61,7 @@ def makeup_interface():
     fn=process,
     inputs=[
         gr.Image(label="Input Image: ", type="numpy", height=1024),
-        gr.Dropdown(value="Boho Makeup", 
+        gr.Dropdown(value="-", 
                     choices=["-", "random 🎲", "Anime Makeup", "Artistic Makeup", "Avant-garde Makeup", 
                              "Bohemian Makeup", "Boho Makeup", "Classic Makeup", "Cut Crease Makeup", 
                              "Dewy Makeup", "Edgy Makeup", "Festival Makeup", "Glam Makeup", 
@@ -75,7 +75,7 @@ def makeup_interface():
         gr.Dropdown(value="True", choices=["True", "False"], label="Blush (True/False): "),
         gr.Dropdown(value="True", choices=["True", "False"], label="Lipstick (True/False): "),
         gr.Dropdown(value="True", choices=["True", "False"], label="Lip Gloss (True/False): "),
-        gr.Slider(minimum=0, maximum=1, step=0.01, value=0.5, label="Denoise Weight")
+        gr.Slider(minimum=0, maximum=0.5, step=0.01, value=0.4, label="Weight")
     ],
     outputs=[gr.Gallery(label="Generated Images", height=500)]
 )

@@ -1,8 +1,8 @@
 {
   "136": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1000,
+      "height": 1500,
       "batch_size": 1,
       "color": 0
     },
@@ -34,14 +34,14 @@
   },
   "138": {
     "inputs": {
-      "image": "ba96bce819afb69cefd1e59a9f415779.jpg",
+      "image": "mina-.jpeg",
       "upload": "image"
     },
     "class_type": "LoadImage"
   },
   "139": {
     "inputs": {
-      "size": 1024,
+      "size": 1500,
       "interpolation_mode": "bicubic",
       "image": [
         "138",
@@ -58,8 +58,8 @@
       "clothes": false,
       "accessories": false,
       "background": false,
-      "confidence": 0.4,
-      "detail_range": 16,
+      "confidence": 0.1,
+      "detail_range": 1,
       "black_point": 0.01,
       "white_point": 0.99,
       "process_detail": true,
@@ -72,7 +72,7 @@
   },
   "142": {
     "inputs": {
-      "ckpt_name": "epicphotogasm_ultimateFidelity.safetensors",
+      "ckpt_name": "epicphotogasm_v4One4All.safetensors",
       "vae_name": "Baked VAE",
       "clip_skip": -1,
       "lora_name": "HyperSD\\SD15\\Hyper-SD15-8steps-lora.safetensors",
@@ -82,11 +82,11 @@
         "206",
         0
       ],
-      "negative": "(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, (mutated hands and fingers:1.4), disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation",
+      "negative": "(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, (mutated hands and fingers:1.4), disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, accessories",
       "token_normalization": "length+mean",
       "weight_interpretation": "comfy++",
-      "empty_latent_width": 1024,
-      "empty_latent_height": 1024,
+      "empty_latent_width": 64,
+      "empty_latent_height": 64,
       "batch_size": 1
     },
     "class_type": "Efficient Loader"
@@ -132,15 +132,15 @@
   },
   "156": {
     "inputs": {
-      "guide_size": 384,
+      "guide_size": 1556,
       "guide_size_for": true,
-      "max_size": 1024,
-      "seed": 832328102034994,
+      "max_size": 1500,
+      "seed": 334401931143861,
       "steps": 8,
       "cfg": 1,
-      "sampler_name": "uni_pc",
+      "sampler_name": "euler",
       "scheduler": "AYS SD1",
-      "denoise": 0.85,
+      "denoise": 0.5,
       "feather": 5,
       "noise_mask": true,
       "force_inpaint": true,
@@ -211,7 +211,7 @@
   },
   "218": {
     "inputs": {
-      "scale": 3,
+      "scale": 4,
       "model": [
         "142",
         0
@@ -232,7 +232,7 @@
   },
   "228": {
     "inputs": {
-      "text": "Beach Waves with Straight Hair: Mid-length, straight hair with loose beach waves at the ends. Add a light brown color with subtle blonde highlights\n"
+      "text": "Windy Day: A braided headband keeps hair secure while remaining stylish, ideal for a windy day."
     },
     "class_type": "JjkText"
   }

@@ -33,14 +33,13 @@ def save_input_image(img):
     pillow_image = Image.fromarray(img)
     pillow_image.save(input_img_path)
 
-    print(f"Image saved at: {input_img_path}")  # Debugging line
+    #print(f"Image saved at: {input_img_path}")  # Debugging line
     return input_img_path 
 
 # Dictionary for hairstyles
 hairstyles = {
     "-":" ",
-    "Boho Twisted Crown": "Boho Twisted Crown: Create loose twists around the head, pin randomly. This casual style adds romantic charm to everyday looks, with no accessories.",
-    "Origami Bow Updo": "Shape hair into geometric folds resembling a bow at the nape, offering avant-garde sophistication for special occasions.",
+    "Boho Twisted Crown": "Boho Twisted Crown: Create loose twists around the head, This casual style adds romantic charm to everyday looks, with no accessories.",
     "Braided Heart Design": "Shape braids into a heart pattern at the back for a romantic and symbolic style.",
     "Woven Basket Crown": "Create a basket weave pattern around the crown area for a textured style with dimensional interest.",
     "Multi-Twisted Updo": "Form various-sized twists and pin them randomly to craft a creative updo perfect for formal events.",
@@ -49,7 +48,6 @@ hairstyles = {
     "Dutch Braid": "Braid three strands under each other to create a Dutch braid that stands out above the rest of the hair.",
     "French Twist": "Twist hair and pin it up at the back for a classic and elegant French twist.",
     "Half-Up Half-Down": "Divide hair into two parts, tying the upper portion into a bun or braid while letting the rest flow freely.",
-    "High Ponytail": "Tie hair into a high ponytail for a polished and sleek appearance.",
     "Layered Hair with Curtain Bangs": "Pair layered haircuts that create volume and texture with curtain bangs parted down the middle for a trendy look.",
     "Side-Swept Bangs": "Layer hair and sweep it to the side, framing the face with stylish fringes.",
     "Soft Curls": "Style feminine curls to fall gracefully over the shoulders for a romantic appearance.",
@@ -65,7 +63,6 @@ hairstyles = {
     "Defying Gravity": "Defy gravity, flowing hair in a vibrant ombre color, styled upward dynamically.",
     "Mythical Inspiration": "flowing silver hair with intricate braids and woven flowers for a mythical, elven-inspired look.",
     "Underwater Dreams": "Achieve a mermaid-inspired hairstyle, textured hair adorned with seashells and seaweed.",
-    "Chic Pixie Cut": "A choppy pixie cut with textured layers and platinum blonde color for a bold, modern look.",
     "Undercut with Style": "Pair a high fade on the sides with a neatly styled pompadour, enhanced by dark brown hair with red tips.",
     "Curly Bob with Bangs": "curly bob with blunt bangs, styled in a vibrant red for a playful and striking statement.",
     "Silky Straight": "straight hair with a glossy shine and a center part for a timeless and elegant style.",
@@ -101,7 +98,7 @@ def process(img, hair_color, hairstyle, slider):
         prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         
         # Set the hairstyle description
-        text2 = f"{hairstyle}, with {hair_color} hair"
+        text2 = f"{hairstyle}, with {hair_color} hair color"
 
         prompt["228"]["inputs"]["text"] = text2
         prompt["156"]["inputs"]["denoise"] = slider
@@ -129,7 +126,7 @@ def hair_interface():
             gr.Image(type="numpy", label="Upload Image"),  # Input as numpy array
             gr.Dropdown(choices=hair_color_choices, label="Hair Color"),  # Dropdown for hair color
             gr.Dropdown(choices=hairstyle_choices, label="Hairstyle"),  # Dropdown for hairstyle
-            gr.Slider(minimum=0, maximum=1, step=0.01, value=1, label="Weight")  # Slider input
+            gr.Slider(minimum=0, maximum=1, step=0.01, value=0.75, label="Weight")  # Slider input
         ],
         outputs=[gr.Gallery(label="Outputs: ")]  # Output images in a gallery
     )

@@ -313,7 +313,7 @@ async def eye_lip_face_edit(
 
         # Set a random seed for reproducibility
         prompt["27"]["inputs"]["seed"] = random.randint(0,9999999999999999)
-        prompt["21"]["inputs"]["face_shape_weight"] = slider
+        prompt["27"]["inputs"]["denoise"] = slider
         prompt["21"]["inputs"].update({
             "eyes color": eyes_color =="True",
             "eyes shape" : eyes_shape == "True",
@@ -345,7 +345,7 @@ async def hair_edit(
         prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         
         # Set the hairstyle description
-        text2 = f"{hairstyle}, with {hair_color} hair"
+        text2 = f"{hairstyle}, with {hair_color} hair color"
 
         prompt["228"]["inputs"]["text"] = text2
         prompt["156"]["inputs"]["denoise"] = slider
