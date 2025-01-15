@@ -32,6 +32,7 @@ def process(img, makeup_style, eyeshadow, eyeliner, mascara, blush, lipstick, li
             raise ValueError(f"Invalid slider value: {slider}. Please provide a number between 0 and 1.")
 
         # Set dynamic inputs in the workflow
+        prompt["13"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         prompt["13"]["inputs"]["denoise"] = slider_value
         prompt["9"]["inputs"].update({
             "makeup_style": makeup_style,
