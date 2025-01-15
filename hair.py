@@ -113,8 +113,8 @@ def process(img, hair_color, hairstyle, slider):
         return images
     
     except Exception as e:
-        logger.error(f"Expression editing error: {e}")
-        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
+        logger.error(f"Hair editing error: {e}")
+        raise HTTPException(status_code=500, detail="Hair editing processing failed.")
     
 hair_color_choices = ["-", "Black", "Brown", "Blonde", "Red", "Pink", "Blue", "Green", "Purple", "White", "Grey"]
 hairstyle_choices = list(hairstyles.keys()) # Use the keys of the dictionary for hairstyle options

@@ -33,10 +33,10 @@ def process(img,freckles,eyes_details, iris_details, circular_iris, circular_pup
         prompt["8"]["inputs"]["seed"] = random.randint(0,999999999999999)
         prompt["5"]["inputs"].update({
             "freckles": freckles,
-            "eyes detail": eyes_details,
-            "iris detail" : iris_details,
-            "circular iris": circular_iris,
-            "circular pupil": circular_pupil  
+            "eyes_detail": eyes_details,
+            "iris_detail" : iris_details,
+            "circular_iris": circular_iris,
+            "circular_pupil": circular_pupil  
         })
         img_filename = save_input_image(img)
 

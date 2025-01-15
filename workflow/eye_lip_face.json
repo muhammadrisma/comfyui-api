@@ -1,7 +1,7 @@
 {
   "14": {
     "inputs": {
-      "image": "ba96bce819afb69cefd1e59a9f415779.jpg",
+      "image": "ComfyUI_temp_syfma_00005_.png",
       "upload": "image"
     },
     "class_type": "LoadImage"
@@ -126,9 +126,9 @@
   },
   "27": {
     "inputs": {
-      "seed": 669407611318648,
+      "seed": 674801526008265,
       "steps": 20,
-      "cfg": 5,
+      "cfg": 6,
       "sampler_name": "euler",
       "scheduler": "exponential",
       "denoise": 0.35000000000000003,
@@ -151,10 +151,27 @@
     },
     "class_type": "KSampler"
   },
+  "28": {
+    "inputs": {
+      "saturation": 0.73,
+      "contrast": 1,
+      "brightness": 1,
+      "sharpness": 1,
+      "highpass_radius": 6,
+      "highpass_samples": 1,
+      "highpass_strength": 0.99,
+      "colorize": "true",
+      "image": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "Image Dragan Photography Filter"
+  },
   "29": {
     "inputs": {
       "images": [
-        "25",
+        "28",
         0
       ]
     },

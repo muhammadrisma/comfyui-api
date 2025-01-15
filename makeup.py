@@ -8,6 +8,9 @@ import gradio as gr
 from PIL import Image
 from websockets_api import get_prompt_images
 from settings import MAKEUP_WORKFLOW, COMFY_UI_PATH
+from fastapi import HTTPException
+import logging
+logger = logging.getLogger(__name__)
 
 # Save input image and reference image into the input folder inside ComfyUI with unique filenames
 def save_input_image(img):
@@ -25,15 +28,8 @@ def process(img, makeup_style, eyeshadow, eyeliner, mascara, blush, lipstick, li
         with open(MAKEUP_WORKFLOW, "r", encoding="utf-8") as f:
             prompt = json.load(f)
 
-        # Validate and convert slider value
-        try:
-            slider_value = float(slider)
-        except ValueError:
-            raise ValueError(f"Invalid slider value: {slider}. Please provide a number between 0 and 1.")
-
         # Set dynamic inputs in the workflow
-        prompt["13"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
-        prompt["13"]["inputs"]["denoise"] = slider_value
+        prompt["13"]["inputs"]["denoise"] = slider
         prompt["9"]["inputs"].update({
             "makeup_style": makeup_style,
             "eyeshadow": eyeshadow == "True",
@@ -53,8 +49,8 @@ def process(img, makeup_style, eyeshadow, eyeliner, mascara, blush, lipstick, li
         return images
 
     except Exception as e:
-        logger.error(f"Expression editing error: {e}")
-        raise HTTPException(status_code=500, detail="Expression editing processing failed.")
+        logger.error(f"Make-up editing error: {e}")
+        raise HTTPException(status_code=500, detail="Make-up editing processing failed.")
 
 # Gradio interface for cloth swapping tool
 def makeup_interface():
