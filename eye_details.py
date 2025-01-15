@@ -38,7 +38,7 @@ def process(img,freckles,eyes_details, iris_details, circular_iris, circular_pup
             "eyes detail": eyes_details,
             "iris detail" : iris_details,
             "circular iris": circular_iris,
-            "circular pupil": circular_pupil,
+            "circular pupil": circular_pupil  
         })
         img_filename = save_input_image(img)
 
@@ -57,7 +57,7 @@ def eyedetails_interface():
         fn=process,
         inputs=[
             gr.Image(label="Input Image: ", type="numpy", height=1024), 
-            gr.Slider(minimum=0, maximum=1.3, step=0.01, value=0, label="Freckles:"),
+            gr.Slider(minimum=0, maximum=1.4, step=0.01, value=0, label="Freckles:"),
             gr.Slider(minimum=0, maximum=1.3, step=0.01, value=0, label="Eye Details:"),
             gr.Slider(minimum=0, maximum=1.3, step=0.01, value=0, label="Iris Details:"),
             gr.Slider(minimum=0, maximum=1.3, step=0.01, value=0, label="Circular Iris:"),
