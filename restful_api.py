@@ -280,11 +280,11 @@ async def eye_details_edit(
         # Set a random seed for reproducibility
         prompt["8"]["inputs"]["seed"] = random.randint(0,999999999999999)
         prompt["5"]["inputs"].update({
-            "freckles": freckles =="False",
-            "eyes detail": eyes_details =="True",
-            "iris detail" : iris_details == "True",
-            "circular iris": circular_iris == "True",
-            "circular pupil": circular_pupil == "True",
+            "freckles": freckles,
+            "eyes_detail": eyes_details,
+            "iris_detail" : iris_details,
+            "circular_iris": circular_iris,
+            "circular_pupil": circular_pupil 
         })
         prompt["1"]["inputs"]["image"] = save_image(img)
         
@@ -299,11 +299,11 @@ async def eye_details_edit(
 @app.post("/eye_lip_face-edit/")
 async def eye_lip_face_edit(
     img: UploadFile = File(...),
-    eyes_color: bool=True,
-    eyes_shape: bool=True,
-    lips_color: bool=True,
-    lips_shape: bool=True,
-    face_shape: bool=True,
+    eyes_color: str="-",
+    eyes_shape: str="-",
+    lips_color: str="-",
+    lips_shape: str="-",
+    face_shape: str="-",
     slider: float =0
     ):
     try:
@@ -314,11 +314,11 @@ async def eye_lip_face_edit(
         prompt["27"]["inputs"]["seed"] = random.randint(0,9999999999999999)
         prompt["21"]["inputs"]["face_shape_weight"] = slider
         prompt["21"]["inputs"].update({
-            "eyes color": eyes_color =="True",
-            "eyes shape" : eyes_shape == "True",
-            "lip color": lips_color == "True",
-            "lip shape": lips_shape == "True",
-            "face shape": face_shape == "True"
+            "eyes_color": eyes_color,
+            "eyes_shape": eyes_shape,
+            "lips_color": lips_color,
+            "lips_shape": lips_shape,
+            "face_shape": face_shape
         })
 
         prompt["14"]["inputs"]["image"] = save_image(img)
@@ -335,7 +335,6 @@ async def hair_edit(
     img: UploadFile = File(...),
     hair_color: str="-",
     hairstyle: str="-",
-    hair_length: str="-",
     slider: float =0
     ):
     try:
@@ -345,7 +344,7 @@ async def hair_edit(
         prompt["156"]["inputs"]["seed"] = random.randint(0, 99999999999999999)
         
         # Set the hairstyle description
-        text2 = f"{hairstyle}, with {hair_color} hair and {hair_length} hair."
+        text2 = f"{hairstyle}, with {hair_color} hair color"
 
         prompt["228"]["inputs"]["text"] = text2
         prompt["156"]["inputs"]["denoise"] = slider

@@ -1,10 +1,9 @@
-import os
 import json
 import uuid
-import random
 from datetime import datetime
 from pathlib import Path
 import gradio as gr
+import random
 from PIL import Image
 from websockets_api import get_prompt_images
 from settings import MAKEUP_WORKFLOW, COMFY_UI_PATH
@@ -34,6 +33,7 @@ def process(img, makeup_style, eyeshadow, eyeliner, mascara, blush, lipstick, li
         except ValueError:
             raise ValueError(f"Invalid slider value: {slider}. Please provide a number between 0 and 1.")
 
+        prompt["7"]["inputs"]["seed"] = random.randint(0,999999999999999)
         # Set dynamic inputs in the workflow
         prompt["13"]["inputs"]["denoise"] = slider_value
         prompt["9"]["inputs"].update({
