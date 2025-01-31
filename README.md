@@ -3,10 +3,8 @@
 - Run ComfyUI
 - Run Cloth Swap/Expression Editing etc
 - Run Restfull Api
-# Expression Editing Tool & Cloth Swap API
-
 ## Important Notes
-- Input images should be of HD resolution to achieve better results.
+- Make sure you already installed ComfyUI adn all the Costume Nodes and Models that will be used in the workflow
 
 ## Overview
 - Expression Editing
