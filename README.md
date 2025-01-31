@@ -1,12 +1,3 @@
-# Question
-
-update the readme
-
-# Answer
-
-Certainly! Below is an updated version of the README text with improvements for clarity and structure, while preserving the essential information:
-
----
 # FLOW
 - Set Database using db.sql file
 - Run ComfyUI
@@ -129,8 +120,7 @@ Both tools display processed images in output galleries.
 ## Interface Previews
 1. **Cloth Swap**: ![Cloth Swap Interface](demo/cloth_swap.png)
 2. **Expression Editing**: ![Expression Editing Interface](demo/expression.png)
-3. **Cloth and Background Editing**: ![Cloth and Background Editing Interface 1](demo/cloth_background_1.png)
-
+3. **Cloth and Background Editing**: ![cLOTH AND background Editing Interface](demo/cloth background (1).png)
 ## References
 - ComfyUI Workflow:
   1. Expression Editing: [Video Link](https://www.youtube.com/watch?v=q0Vf-ZZsbzI&t=150s)
@@ -141,6 +131,4 @@ Both tools display processed images in output galleries.
   - [Video Link 2](https://youtu.be/1iPcRGyj7-E?si=zaAQ88xsFFSI8CBI)
   - [Video Link 3](https://youtu.be/zajODlpfOs4?si=depOaJViLMTNPAnlS)
 
----
-
-Feel free to further modify it according to specific style or additional information requirements!
+- https://thefuturethinker.org/new-comfyui-pulid-flux-2-tutorial-guide-better-than-reactor-faceswap/

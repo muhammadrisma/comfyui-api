@@ -1,0 +1,337 @@
+{
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "10": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "12": {
+    "inputs": {
+      "unet_name": "FLUX1\\flux1-dev-fp8.safetensors",
+      "weight_dtype": "fp8_e4m3fn_fast"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "13": {
+    "inputs": {
+      "noise": [
+        "25",
+        0
+      ],
+      "guider": [
+        "22",
+        0
+      ],
+      "sampler": [
+        "16",
+        0
+      ],
+      "sigmas": [
+        "17",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "16": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "17": {
+    "inputs": {
+      "scheduler": "beta",
+      "steps": 20,
+      "denoise": 1,
+      "model": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "22": {
+    "inputs": {
+      "model": [
+        "12",
+        0
+      ],
+      "conditioning": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "25": {
+    "inputs": {
+      "noise_seed": 246270583314342
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "30": {
+    "inputs": {
+      "clip_name1": "clip_l.safetensors",
+      "clip_name2": "t5xxl_fp8_e4m3fn.safetensors",
+      "type": "flux",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader"
+    }
+  },
+  "40": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "30",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "42": {
+    "inputs": {
+      "image": "WhatsApp Image 2024-12-20 at 14.47.23_84218ded.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "49": {
+    "inputs": {
+      "text": [
+        "112",
+        0
+      ],
+      "clip": [
+        "30",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "79": {
+    "inputs": {
+      "text": "In Chinese traditional knight clad in heavy white and gold armor, adorned with intricate skull decorations that exude authority and grim determination. The armor features ornate dragon engravings, layered lamellar plates, and flowing silk sashes, blending elegance with battle-readiness. Signs of wear and battle damage highlight their experience in countless battles. The background is solid black, emphasizing the knight's striking presence. the face is looking into the camera"
+    },
+    "class_type": "JjkText",
+    "_meta": {
+      "title": "Description Prompt"
+    }
+  },
+  "81": {
+    "inputs": {
+      "torchscript_jit": "on",
+      "image": [
+        "106",
+        0
+      ]
+    },
+    "class_type": "InspyrenetRembg",
+    "_meta": {
+      "title": "Inspyrenet Rembg"
+    }
+  },
+  "82": {
+    "inputs": {
+      "mask": [
+        "81",
+        1
+      ]
+    },
+    "class_type": "InvertMask",
+    "_meta": {
+      "title": "InvertMask"
+    }
+  },
+  "83": {
+    "inputs": {
+      "image": [
+        "81",
+        0
+      ]
+    },
+    "class_type": "Image Bounds",
+    "_meta": {
+      "title": "Image Bounds"
+    }
+  },
+  "84": {
+    "inputs": {
+      "blend_factor": 1,
+      "feathering": 0,
+      "target": [
+        "81",
+        0
+      ],
+      "target_mask": [
+        "82",
+        0
+      ],
+      "target_bounds": [
+        "83",
+        0
+      ],
+      "source": [
+        "85",
+        0
+      ]
+    },
+    "class_type": "Bounded Image Blend with Mask",
+    "_meta": {
+      "title": "Bounded Image Blend with Mask"
+    }
+  },
+  "85": {
+    "inputs": {
+      "image": "bg.webp",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Background Image"
+    }
+  },
+  "86": {
+    "inputs": {
+      "images": [
+        "84",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "106": {
+    "inputs": {
+      "enabled": true,
+      "swap_model": "inswapper_128.onnx",
+      "facedetection": "YOLOv5n",
+      "face_restore_model": "GFPGANv1.4.pth",
+      "face_restore_visibility": 1,
+      "codeformer_weight": 1,
+      "input_image": [
+        "8",
+        0
+      ],
+      "source_image": [
+        "42",
+        0
+      ],
+      "options": [
+        "107",
+        0
+      ]
+    },
+    "class_type": "ReActorFaceSwapOpt",
+    "_meta": {
+      "title": "ReActor 🌌 Fast Face Swap [OPTIONS]"
+    }
+  },
+  "107": {
+    "inputs": {
+      "input_faces_order": "left-right",
+      "input_faces_index": "0,1,2,3",
+      "detect_gender_input": "no",
+      "source_faces_order": "left-right",
+      "source_faces_index": "0,1,2,3",
+      "detect_gender_source": "no",
+      "console_log_level": 1
+    },
+    "class_type": "ReActorOptions",
+    "_meta": {
+      "title": "ReActor 🌌 Options"
+    }
+  },
+  "112": {
+    "inputs": {
+      "delimmitor": "none",
+      "text1": [
+        "113",
+        0
+      ],
+      "text2": [
+        "79",
+        0
+      ]
+    },
+    "class_type": "JjkConcat",
+    "_meta": {
+      "title": "Concatenate"
+    }
+  },
+  "113": {
+    "inputs": {
+      "text": "A man in middle, full body, clean-shaven, medium side-swept hairstyle"
+    },
+    "class_type": "JjkText",
+    "_meta": {
+      "title": "Number Gender and Hairstyle"
+    }
+  }
+}

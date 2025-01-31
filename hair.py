@@ -1,11 +1,9 @@
-import os
 import numpy as np
 import json
 import uuid
 from datetime import datetime
 from pathlib import Path
 import gradio as gr
-import random
 import random
 from PIL import Image
 from websockets_api import get_prompt_images
