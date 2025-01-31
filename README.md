@@ -45,7 +45,6 @@ Run ComfyUI Portable -> Run resful_api.py -> Run exp. character_generation.py
 ## Interface Previews
 1. **Cloth Swap**: ![Cloth Swap Interface](demo/cloth_swap.png)
 2. **Expression Editing**: ![Expression Editing Interface](demo/expression.png)
-3. **Cloth and Background Editing**: ![ClothBG](demo/cloth background (1).png)
 ## References
 - ComfyUI Workflow:
   1. Expression Editing: [Video Link](https://www.youtube.com/watch?v=q0Vf-ZZsbzI&t=150s)
